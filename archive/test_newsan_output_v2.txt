@@ -1,0 +1,35 @@
+\U0001f4e1 Fetching newsan/celulares...
+\U0001f4e1 Navegando Newsan Search celulares P1: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=1
+   \u2192 P1: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P2: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=2
+   \u2192 P2: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P3: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=3
+   \u2192 P3: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P4: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=4
+   \u2192 P4: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P5: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=5
+   \u2192 P5: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P6: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=6
+   \u2192 P6: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P7: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=7
+   \u2192 P7: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P8: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=8
+   \u2192 P8: 4 productos
+\U0001f4e1 Navegando Newsan Search celulares P9: https://www.tiendanewsan.com.ar/catalogsearch/result/?q=celulares&p=9
+   \u2192 P9: 4 productos
+   \u2192 36 productos raw
+   \u2192 36 productos parseados
+   \u2705 celulares: 36 productos, 0 glitches, 44.33s
+
+=== celulares ===
+  Productos found: 36
+  - 0.0% OFF | $83,999 | Inflador Compresor Usb a Batería Philco
+  - 0.0% OFF | $29,735 | Estabilizador De Tensión Digital Philco 10a
+  - 0.0% OFF | $155,759 | Hidrolavadora 1100w 90 Bar Verde Philco
+  - 0.0% OFF | $175,499 | Freidora de Aire Digital Philco 9L 2000W Negro
+  - 0.0% OFF | $83,999 | Inflador Compresor Usb a Batería Philco
+  - 0.0% OFF | $29,735 | Estabilizador De Tensión Digital Philco 10a
+  - 0.0% OFF | $155,759 | Hidrolavadora 1100w 90 Bar Verde Philco
+  - 0.0% OFF | $175,499 | Freidora de Aire Digital Philco 9L 2000W Negro
+  - 0.0% OFF | $83,999 | Inflador Compresor Usb a Batería Philco
+  - 0.0% OFF | $29,735 | Estabilizador De Tensión Digital Philco 10a

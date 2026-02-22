@@ -1,0 +1,243 @@
+TOTAL PRODUCTOS EN DB: 5349
+
+ESTADISTICAS GENERALES:
+  Total productos: 5349
+  Con descuento: 3558 (66.5%)
+  Descuento promedio: 19.9%
+  Descuento maximo: 83.1%
+  30%+ descuento: 350
+  40%+ descuento: 121
+  50%+ descuento: 47
+
+CATEGORIAS:
+  audio | 1267 prods | avg: 11.8% | max: 74.9% | hot deals: 95
+  gaming | 1084 prods | avg: 10.7% | max: 83.1% | hot deals: 59
+  smartwatches | 1061 prods | avg: 19.3% | max: 60.0% | hot deals: 48
+  celulares | 926 prods | avg: 11.5% | max: 74.0% | hot deals: 61
+  informatica | 519 prods | avg: 14.3% | max: 60.9% | hot deals: 46
+  smart-tv | 170 prods | avg: 9.0% | max: 43.2% | hot deals: 3
+  aires | 138 prods | avg: 22.4% | max: 53.3% | hot deals: 28
+  cocinas | 126 prods | avg: 2.7% | max: 57.2% | hot deals: 1
+  microondas | 51 prods | avg: 12.8% | max: 40.0% | hot deals: 6
+  soundbar | 7 prods | avg: 28.6% | max: 40.0% | hot deals: 3
+
+TOP 20 DESCUENTOS:
+  1. 83.1% OFF
+     $1349 (lista $7999)
+     Noganet - Mouse Noganet St-068
+     https://www.oncity.com/mouse-noganet-st-068-136599/p
+
+  2. 74.9% OFF
+     $9284 (lista $36999)
+     Daewoo - Auricular Daewoo Luxor Dw-Lx531pi
+     https://www.oncity.com/auricular-daewoo-luxor-dw-lx531pi-151141/p
+
+  3. 74.0% OFF
+     $11573 (lista $44515)
+     ONEBOX - Soporte Celular Onebox P/ Moto Bicicleta + Funda Protectora
+     https://www.oncity.com/soporte-celular-onebox-p--moto-bicicleta---funda-protectora-123840/p
+
+  4. 63.0% OFF
+     $56034 (lista $151442)
+     Tronsmart - Parlante Tronsmart T6 Mini Negro
+     https://www.oncity.com/parlante-tronsmart-t6-mini-negro-87509/p
+
+  5. 63.0% OFF
+     $56034 (lista $151442)
+     Tronsmart - Parlante Tronsmart T6 Mini Rojo
+     https://www.oncity.com/parlante-tronsmart-t6-mini-rojo-87489/p
+
+  6. 60.9% OFF
+     $99999 (lista $255827)
+     iQual - Tablet Telefono 4G 7" iQual T7L 1GB 16GB Android
+     https://www.oncity.com/tablet-telefono-4g-7--iqual-t7l-1gb-16gb-android-101475/p
+
+  7. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Blanco
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-blanco-70283/p
+
+  8. 60.0% OFF
+     $12319 (lista $30799)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 8, 9, 10
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-8-9-10-115787/p
+
+  9. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Azul Oscuro
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-azul-oscuro-70291/p
+
+  10. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Lila
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-lila-70290/p
+
+  11. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Azul
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-azul-70289/p
+
+  12. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Rojo
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-rojo-70288/p
+
+  13. 60.0% OFF
+     $34119 (lista $85299)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Rosa Chicle
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-rosa-chicle-70287/p
+
+  14. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Gris
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-gris-70286/p
+
+  15. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Verde
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-verde-70285/p
+
+  16. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Amarillo
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-amarillo-70284/p
+
+  17. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Rosa Claro
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-rosa-claro-70282/p
+
+  18. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Verde Agua
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-verde-agua-70281/p
+
+  19. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Celeste
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-celeste-70280/p
+
+  20. 60.0% OFF
+     $5199 (lista $12999)
+     Lcs - Malla Pulsera Correa Para Xiaomi Mi Band 5/6/7 Naranja
+     https://www.oncity.com/malla-pulsera-correa-para-xiaomi-mi-band-5-6-7-naranja-70279/p
+
+TOP 20 MAYOR MARGEN ($):
+  1. Margen: $10039265
+     $10859999 vs $20899264
+     Apple - Apple MacBook Pro 16 Pulgadas M4 Max 1TB 36GB RAM - Color Pl
+     https://www.oncity.com/apple-macbook-pro-16-pulgadas-m4-max-1tb-36gb-ram-60842/p
+
+  2. Margen: $6455200
+     $5729999 vs $12185199
+     Apple - MacBook Pro de 14 pulgadas con chip M4 Pro 512GB
+     https://www.oncity.com/macbook-pro-de-14-pulgadas-con-chip-m4-pro-512gb-60735/p
+
+  3. Margen: $4969106
+     $3439999 vs $8409105
+     Apple - Apple MacBook Air M4 15 Pulgadas 256GB 16GB RAM 10-Core CPU 
+     https://www.oncity.com/apple-macbook-air-m4-15-pulgadas-256gb-16gb-ram-10-core-cpu-8-core-gpu-60834/p
+
+  4. Margen: $2548532
+     $3439999 vs $5988531
+     Apple - Apple MacBook Air M4 13 Pulgadas 256GB 16GB RAM 10-Core CPU 
+     https://www.oncity.com/apple-macbook-air-m4-13-pulgadas-256gb-16gb-ram-10-core-cpu-8-core-gpu-60734/p
+
+  5. Margen: $2517791
+     $7973006 vs $10490798
+     Apple - Apple MacBook Air M4 15 Pulgadas 512GB 24GB RAM 10-Core CPU 
+     https://www.oncity.com/apple-macbook-air-m4-15-pulgadas-512gb-24gb-ram-10-core-cpu-10-core-gpu-60741/p
+
+  6. Margen: $2358090
+     $3659999 vs $6018089
+     Apple - IPhone 17 Pro Apple 256Gb 6.3" Azul Oscuro
+     https://www.oncity.com/-iphone-17-pro-256gb-102914/p
+
+  7. Margen: $2145991
+     $6795639 vs $8941631
+     Apple - Apple MacBook Air M4 15 Pulgadas 512GB 16GB RAM 10-Core CPU 
+     https://www.oncity.com/apple-macbook-air-m4-15-pulgadas-512gb-16gb-ram-10-core-cpu-10-core-gpu-60833/p
+
+  8. Margen: $2133203
+     $3047413 vs $5180616
+     Banghó - NOTEBOOK 15" BANGHO GM 15Z13 RTX4050 I7 F i7-13620H 16GB SSD
+     https://www.oncity.com/notebook-15--bangho-gm-15z13-rtx4050-i7-f-i7-13620h-16gb-ssd-1tb-rtx4050-fhd-119392/p
+
+  9. Margen: $2088896
+     $2059999 vs $4148895
+     Apple - IPhone 16 Apple 128Gb 6.1” Negro
+     https://www.oncity.com/iphone-16---128-gb-53991/p
+
+  10. Margen: $2030954
+     $2359999 vs $4390953
+     Apple - Apple iPad Air M3 13 Pulgadas 128GB - Color Plateado
+     https://www.oncity.com/apple-ipad-air-m3-13-pulgadas-128gb-60845/p
+
+  11. Margen: $2009365
+     $2429999 vs $4439364
+     Apple - IPhone 16 Apple 256Gb 6.1" Negro
+     https://www.oncity.com/iphone-16---256-gb-54600/p
+
+  12. Margen: $1974322
+     $2639999 vs $4614321
+     Apple - IPhone 17 Apple 256Gb 6.3" Negro
+     https://www.oncity.com/-iphone-17-256gb-102915/p
+
+  13. Margen: $1924997
+     $3699990 vs $5624987
+     Apple - IPhone 17 Pro Max Apple 512Gb 6,9" Naranja Cósmico
+     https://www.oncity.com/iphone-17-pro-max-512-gb---naranja-cosmico-101602/p
+
+  14. Margen: $1852763
+     $2646817 vs $4499580
+     Banghó - NOTEBOOK 15" BANGHO GM-15Z13 RTX3050 I7 F i7-13620H 16GB SSD
+     https://www.oncity.com/notebook-15--bangho-gm-15z13-rtx3050-i7-f-i7-13620h-16gb-ssd-1tb-rtx3050-fhd-119391/p
+
+  15. Margen: $1849997
+     $3399990 vs $5249987
+     Apple - IPhone 17 Pro Max Apple 256Gb 6,9" Azul Oscuro
+     https://www.oncity.com/iphone-17-pro-max-256gb---azul-oscuro-100942/p
+
+  16. Margen: $1849997
+     $3399990 vs $5249987
+     Apple - IPhone 17 Pro Max Apple 256GB Plata
+     https://www.oncity.com/iphone-17-pro-max-256gb---plata-100941/p
+
+  17. Margen: $1849997
+     $3399990 vs $5249987
+     Apple - IPhone 17 Pro Max Apple 256Gb 6,9" Naranja Cósmico
+     https://www.oncity.com/iphone-17-pro-max-256gb---naranja-cosmico-100940/p
+
+  18. Margen: $1843903
+     $5839029 vs $7682933
+     Apple - Apple iPad Pro M4 13 Pulgadas 512GB - Color Negro
+     https://www.oncity.com/apple-ipad-pro-m4-13-pulgadas-512gb-60843/p
+
+  19. Margen: $1820666
+     $5765443 vs $7586110
+     Apple - Apple MacBook Air M3 13 Pulgadas 512GB 16GB RAM - Color Plat
+     https://www.oncity.com/apple-macbook-air-m3-13-pulgadas-512gb-16gb-ram-60839/p
+
+  20. Margen: $1766515
+     $2523593 vs $4290108
+     Banghó - NOTEBOOK 14" BANGHO BES PRO X4 I7-1165G7 8GB SSD 480GB FHD W
+     https://www.oncity.com/notebook-14--bangho-bes-pro-x4-i7-1165g7-8gb-ssd-480gb-fhd-win-11-pro-negro-83296/p
+
+TOP 15 MARCAS CON MAS DESCUENTO:
+  Lcs                       | 24 prods | avg: 60.0% | max: 60.0% | hot: 24
+  Tronsmart                 | 8 prods | avg: 49.6% | max: 63.0% | hot: 8
+  Lanzarote                 | 5 prods | avg: 37.5% | max: 43.8% | hot: 5
+  Alien                     | 15 prods | avg: 37.5% | max: 55.0% | hot: 12
+  3D Game                   | 5 prods | avg: 33.6% | max: 36.0% | hot: 5
+  AKG                       | 8 prods | avg: 30.7% | max: 33.3% | hot: 8
+  Telefunken                | 11 prods | avg: 30.6% | max: 40.0% | hot: 6
+  Noganet                   | 17 prods | avg: 30.3% | max: 83.1% | hot: 6
+  TECNO4U                   | 19 prods | avg: 30.1% | max: 36.7% | hot: 7
+  Rode                      | 8 prods | avg: 30.0% | max: 30.0% | hot: 8
+  Numark                    | 5 prods | avg: 30.0% | max: 30.0% | hot: 5
+  ONEBOX                    | 11 prods | avg: 29.9% | max: 74.0% | hot: 8
+  Electra                   | 10 prods | avg: 29.0% | max: 41.2% | hot: 5
+  Legatus                   | 11 prods | avg: 28.6% | max: 29.0% | hot: 0
+  AimZone                   | 16 prods | avg: 28.6% | max: 28.6% | hot: 0
+
+ALERTAS REGISTRADAS: 0

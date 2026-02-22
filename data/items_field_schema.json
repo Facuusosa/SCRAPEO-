@@ -1,0 +1,29 @@
+{
+  "name": "items",
+  "args": [
+    {
+      "name": "sessionId",
+      "type": {
+        "name": "NonEmptyString",
+        "kind": "SCALAR",
+        "ofType": null
+      }
+    },
+    {
+      "name": "filtering",
+      "type": {
+        "name": "ItemFilteringInputType",
+        "kind": "INPUT_OBJECT",
+        "ofType": null
+      }
+    }
+  ],
+  "type": {
+    "name": null,
+    "kind": "NON_NULL",
+    "ofType": {
+      "name": "ItemSearchResponse",
+      "kind": "OBJECT"
+    }
+  }
+}

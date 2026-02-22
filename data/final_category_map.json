@@ -1,0 +1,64 @@
+{
+  "id": null,
+  "label": "",
+  "sections": [
+    {
+      "id": null,
+      "label": "",
+      "items": [
+        {},
+        {
+          "id": null,
+          "label": "M\u00e1s Vendidos"
+        },
+        {
+          "id": null,
+          "label": "Ofertas",
+          "href": "/l/?promociones=ofertas-semanales"
+        },
+        {
+          "id": null,
+          "label": "CUPONERA"
+        },
+        {
+          "id": null,
+          "label": "Hasta $9.999",
+          "href": "/l/?promociones=hasta-9999"
+        },
+        {
+          "id": null,
+          "label": "Cup\u00f3n MINI15",
+          "href": "/l/?promociones=cupon-mini15"
+        },
+        {
+          "id": null,
+          "label": "HOY Notebooks",
+          "href": "/l/informatica/notebooks/"
+        },
+        {
+          "id": null,
+          "label": "GANGAS"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "",
+      "items": [
+        {
+          "id": null,
+          "label": "Simul\u00e1 tu Cr\u00e9dito",
+          "href": "https://simulador-creditos.fravega.com/simulador?utm_source=ecommerce"
+        },
+        {
+          "id": null,
+          "label": "Tiendas Oficiales"
+        },
+        {
+          "id": null,
+          "label": "Vend\u00e9 en Fr\u00e1vega"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,347 @@
+{
+  "ItemFilteringInputType": {
+    "kind": "INPUT_OBJECT",
+    "name": "ItemFilteringInputType",
+    "inputFields": [
+      {
+        "name": "ids",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "skus",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "keywords",
+        "type": {
+          "name": "ByKeyword",
+          "kind": "INPUT_OBJECT",
+          "ofType": null
+        }
+      },
+      {
+        "name": "brands",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "categories",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "collections",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "sellers",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "attributes",
+        "type": {
+          "name": "ByAttribute",
+          "kind": "INPUT_OBJECT",
+          "ofType": null
+        }
+      },
+      {
+        "name": "salePriceAmount",
+        "type": {
+          "name": "BySalePriceAmount",
+          "kind": "INPUT_OBJECT",
+          "ofType": null
+        }
+      },
+      {
+        "name": "salePriceDiscount",
+        "type": {
+          "name": "BySalePriceDiscount",
+          "kind": "INPUT_OBJECT",
+          "ofType": null
+        }
+      },
+      {
+        "name": "availableStock",
+        "type": {
+          "name": "ByAvailableStock",
+          "kind": "INPUT_OBJECT",
+          "ofType": null
+        }
+      },
+      {
+        "name": "installments",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "salesChannels",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      },
+      {
+        "name": "active",
+        "type": {
+          "name": "Boolean",
+          "kind": "SCALAR",
+          "ofType": null
+        }
+      },
+      {
+        "name": "sellerConditions",
+        "type": {
+          "name": null,
+          "kind": "LIST",
+          "ofType": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "NonEmptyString",
+              "kind": "SCALAR"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "ItemSearchResponse": {
+    "kind": "OBJECT",
+    "name": "ItemSearchResponse",
+    "fields": [
+      {
+        "name": "took",
+        "args": [],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": "Long",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "total",
+        "args": [],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "buckets",
+        "args": [
+          {
+            "name": "size",
+            "type": {
+              "name": "PositiveInt",
+              "kind": "SCALAR"
+            }
+          },
+          {
+            "name": "requests",
+            "type": {
+              "name": null,
+              "kind": "LIST"
+            }
+          },
+          {
+            "name": "mergePattern",
+            "type": {
+              "name": null,
+              "kind": "LIST"
+            }
+          }
+        ],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": null,
+            "kind": "LIST",
+            "ofType": {
+              "name": null,
+              "kind": "NON_NULL"
+            }
+          }
+        }
+      },
+      {
+        "name": "results",
+        "args": [
+          {
+            "name": "size",
+            "type": {
+              "name": "PositiveInt",
+              "kind": "SCALAR"
+            }
+          },
+          {
+            "name": "buckets",
+            "type": {
+              "name": null,
+              "kind": "LIST"
+            }
+          },
+          {
+            "name": "mergePattern",
+            "type": {
+              "name": null,
+              "kind": "LIST"
+            }
+          }
+        ],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": null,
+            "kind": "LIST",
+            "ofType": {
+              "name": null,
+              "kind": "NON_NULL"
+            }
+          }
+        }
+      },
+      {
+        "name": "aggregations",
+        "args": [],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": "Aggregations",
+            "kind": "OBJECT",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "sessionId",
+        "args": [],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": "NonEmptyString",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "recommendations",
+        "args": [],
+        "type": {
+          "name": null,
+          "kind": "NON_NULL",
+          "ofType": {
+            "name": "Recommendations",
+            "kind": "OBJECT",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "listUniqueId",
+        "args": [],
+        "type": {
+          "name": "String",
+          "kind": "SCALAR",
+          "ofType": null
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "697ce3a5391459e9732bfdbf",
+  "title": "Celular Motorola Signature 16GB 1TB",
+  "slug": "celular-motorola-signature-16gb-1tb",
+  "brand": {
+    "name": "Motorola"
+  },
+  "skus": {
+    "results": [
+      {
+        "code": "782833",
+        "images": [],
+        "pricing": [
+          {
+            "salePrice": 2499999,
+            "listPrice": 2499999,
+            "discount": 0
+          }
+        ],
+        "stock": null
+      }
+    ]
+  }
+}

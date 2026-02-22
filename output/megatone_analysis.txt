@@ -1,0 +1,48 @@
+============================================================
+DEEP SCAN MEGATONE - RESULTADOS
+============================================================
+  celulares       |  500 prods | 6.7s
+  notebooks       |  500 prods | 9.7s
+  tablets         |  500 prods | 7.6s
+  smart-tv        |  500 prods | 8.5s
+  aires           |  384 prods | 7.5s
+  heladeras       |  485 prods | 6.7s
+  lavarropas      |  359 prods | 7.2s
+  cocinas         |  500 prods | 6.5s
+  audio           |  500 prods | 10.5s
+  consolas        |   86 prods | 1.7s
+  microondas      |  500 prods | 9.2s
+  termotanques    |  125 prods | 3.2s
+  licuadoras      |  309 prods | 7.8s
+  cafeteras       |  443 prods | 8.3s
+
+TOTAL SCRAPEADO: 5691 productos
+
+🔥 TOP 15 MEJORES DESCUENTOS EN MEGATONE:
+  1. 83.1% OFF | $202,949 (Lista $1,199,999) | Microondas Mecanico Sansei 20Lts MDSA20N 5 niveles
+  2. 73.2% OFF | $1,399,999 (Lista $5,219,998) | Aire Acondicionado Hisense Split Inverter 5500w AS
+  3. 71.0% OFF | $89,919 (Lista $309,984) | Mesada Para Mueble De Cocina 120cm Gris
+  4. 70.1% OFF | $206,444 (Lista $688,148) | Muro de TV EMC Flotante Báltico
+  5. 70.1% OFF | $233,894 (Lista $779,647) | Muro de TV EMC Flotante Helsinki
+  6. 70.0% OFF | $188,381 (Lista $627,936) | Muro de TV EMC Flotante Blanco
+  7. 70.0% OFF | $188,381 (Lista $627,936) | Muro de TV EMC Flotante Wengue
+  8. 70.0% OFF | $402,223 (Lista $1,340,742) | Modular de TV EMC con 4 Cajones Blanco
+  9. 70.0% OFF | $442,002 (Lista $1,473,340) | Modular de TV EMC con 4 Cajones Báltico
+  10. 70.0% OFF | $214,433 (Lista $714,775) | Rack Flotante para TV EMC Báltico y Gris Grafito
+  11. 70.0% OFF | $214,433 (Lista $714,775) | Rack Flotante para TV EMC Olmo Finlandés y Negro
+  12. 70.0% OFF | $278,841 (Lista $929,469) | Rack de TV Nórdico Qatar EMC Blanco Y Helsinki
+  13. 70.0% OFF | $145,474 (Lista $484,912) | Mueble para Microondas EMC Blanco
+  14. 68.3% OFF | $69,919 (Lista $219,919) | Alacena Madesa Modular organizador Multiuso Cocina
+  15. 67.8% OFF | $99,919 (Lista $309,984) | Mesada Para Mueble De Cocina 120cm Gris
+
+💰 PRODUCTOS CON MAYOR MARGEN ($):
+  1. Margen $3,960,001 | $3,299,999 vs $7,260,000 | TITAN OS TV Philips OLED 4K 65" con Ambilight
+  2. Margen $3,819,999 | $1,399,999 vs $5,219,998 | Aire Acondicionado Hisense Split Inverter 5500w AS
+  3. Margen $3,387,840 | $10,728,159 vs $14,115,999 | Smart Tv LG Oled 83 Pulgadas Oled83c4psa Evo Ai C4
+  4. Margen $3,184,999 | $7,238,000 vs $10,422,999 | Heladera Bosch Kfn96vpea Multipuerta 605l Inverter
+  5. Margen $3,114,855 | $3,807,044 vs $6,921,899 | Heladera LG Side By Side 647l Smart Inverter Compr
+  6. Margen $2,900,000 | $11,599,999 vs $14,499,999 | Smart Tv Samsung 85 Pulgadas Neo QLED 8K QN85QN800
+  7. Margen $2,809,001 | $3,779,999 vs $6,589,000 | iPhone 17 PRO MAX 256GB
+  8. Margen $2,786,000 | $5,053,999 vs $7,839,999 | Notebook Hp Dragonfly G4 Core I7 32gb Ram 1tb Ssd 
+  9. Margen $2,744,200 | $5,218,899 vs $7,963,099 | NOTEBOOK ACER PREDATOR 16240HZULT 7-255hx16GB512GB
+  10. Margen $2,500,000 | $1,499,999 vs $3,999,999 | Notebook Asus 16" FHD Core i7-1255U 16GB RAM 512GB

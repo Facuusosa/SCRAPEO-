@@ -1,0 +1,48 @@
+============================================================
+SCAN CETROGAR - RESULTADOS
+============================================================
+  celulares            |  137 prods | 0 glitches | 9.8s | OK
+  notebooks            |   66 prods | 0 glitches | 4.4s | OK
+  tablets              |   20 prods | 0 glitches | 1.5s | OK
+  smartwatches         |   35 prods | 0 glitches | 2.3s | OK
+  consolas             |   23 prods | 0 glitches | 2.2s | OK
+  smart-tv             |   92 prods | 0 glitches | 4.7s | OK
+  audio                |    0 prods | 0 glitches | 1.2s | VACIO
+  soundbar             |    0 prods | 0 glitches | 1.5s | VACIO
+  aires                |   58 prods | 0 glitches | 4.5s | OK
+  heladeras            |  148 prods | 0 glitches | 6.8s | OK
+  lavarropas           |  116 prods | 2 glitches | 5.8s | OK
+  cocinas              |  500 prods | 29 glitches | 24.6s | OK
+  microondas           |   28 prods | 0 glitches | 1.9s | OK
+  cafeteras            |   68 prods | 2 glitches | 4.5s | OK
+  freidoras            |   42 prods | 9 glitches | 2.8s | OK
+  aspiradoras          |   47 prods | 0 glitches | 2.7s | OK
+  freezers             |   49 prods | 0 glitches | 3.0s | OK
+
+TOTAL: 1429 productos
+
+EN DB: 1336 prods | 863 con desc | avg: 18.0% | max: 74.3% | 30%+: 106
+
+TOP 10 DESCUENTOS:
+  1. 74.29% OFF | $89999 (lista $349999) | Freidora Overtech Eléctrica Sin Aceite De Aire 1800W 7.
+  2. 71.5% OFF | $56999 (lista $199999) | Freidora Overtech Eléctrica Sin Aceite De Aire 1450W 3.
+  3. 70.87% OFF | $66999 (lista $229999) | Freidora Eléctrica De Aire Sin Aceite Overtech Ov-105.5
+  4. 64.45% OFF | $15999 (lista $44999) | Pava Eléctrica Codini P18HAN Acero Inoxidable 1.8 lt Gr
+  5. 63.64% OFF | $19999 (lista $54999) | Pava Eléctrica Codini  P18MAN Acero Inoxidable 1.8 lt G
+  6. 56.67% OFF | $9099 (lista $20999) | Molinillo Sal/Pimienta Eléctrico Bynox con luz KSD-19 -
+  7. 56.28% OFF | $53990 (lista $123490) | Silla Master cocina comedor apilable reforzada poliprop
+  8. 56.28% OFF | $53990 (lista $123490) | Silla Master cocina comedor apilable reforzada poliprop
+  9. 53.03% OFF | $46500 (lista $99000) | Repisa flotante de melamina invisible minimalista MJ Ma
+  10. 51.44% OFF | $121390 (lista $249988) | Silla Bamboo de comedor cocina en hilo sintético simil 
+
+TOP 10 MAYOR MARGEN:
+  1. Margen $1000000 | $1999999 vs $2999999 | Celular Samsung Galaxy  S25+ 12GB 512GB Mint
+  2. Margen $850000 | $1799999 vs $2649999 | Celular Samsung Galaxy  S25+ 12/256GB Mint
+  3. Margen $850000 | $1799999 vs $2649999 | Celular Samsung Galaxy S25+ 6.7" 12GB 256GB Icyblu
+  4. Margen $850000 | $1799999 vs $2649999 | Celular Samsung Galaxy S25+ 12GB 256GB Navy
+  5. Margen $832000 | $2499999 vs $3331999 | Side by Side Whirlpool WRS955FWMS 518 lt  Inverter
+  6. Margen $809000 | $4799999 vs $5608999 | Heladera LG GS66SXSC SBS 570lt con Dispenser Inver
+  7. Margen $775000 | $979999 vs $1754999 | Lavarropas Carga Frontal 10 kg Gris Drean LFDR1012
+  8. Margen $663000 | $1499999 vs $2162999 | Tablet Samsung Galaxy  SM-X620NZADARO S10 FE+ 8GB 
+  9. Margen $606350 | $606349 vs $1212699 | Cocina eléctrica 4 hornallas Brogas 1560 50 cm bla
+  10. Margen $600000 | $1499999 vs $2099999 | Notebook Samsung Galaxy Book4 i5 16GB +512GB 

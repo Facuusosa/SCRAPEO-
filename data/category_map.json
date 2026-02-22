@@ -1,0 +1,37 @@
+{
+  "Celulares": {
+    "uuid": "5a301c001400007700491793",
+    "keyword": "celular samsung",
+    "example": "AURICULAR SAMSUNG EO-HS1303 AZUL"
+  },
+  "Notebooks": {
+    "uuid": "5a301c031400008a0049181b",
+    "keyword": "notebook",
+    "example": "2 en 1 PCBox Gand"
+  },
+  "TV": {
+    "uuid": "5a301c001400007700491779",
+    "keyword": "tv smart",
+    "example": "CELULAR LIBRE BGH JOY A2 WHITE"
+  },
+  "Heladeras": {
+    "uuid": "5a301c2d140000770049258b",
+    "keyword": "heladera",
+    "example": "Accesorio Bowl para hacer helado KitchenAid R5KICA0WH"
+  },
+  "Lavarropas": {
+    "uuid": "5a301c251400007e004922e1",
+    "keyword": "lavarropas",
+    "example": "ARISTON AQM9F 29U"
+  },
+  "Aire": {
+    "uuid": "5a301c161400007f00491e2e",
+    "keyword": "aire acondicionado",
+    "example": "AIRE ACONDICIONADO PORTATIL FRIO  CALOR ATMA ATP32H14X 2700F  3200 W"
+  },
+  "Consolas": {
+    "uuid": "5a301c141400007e00491dd0",
+    "keyword": "playstation",
+    "example": "Base para Consola PS4 Cargador 2 Joystick Hub USB"
+  }
+}

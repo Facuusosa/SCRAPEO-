@@ -1,0 +1,29 @@
+\U0001f4e1 Fetching casadelaudio/celulares...
+\U0001f4e1 Navegando Casa del Audio celulares P1: https://casadelaudio.com/tecnologia/celulares-y-accesorios.html?p=1
+   \u2192 P1: 7 productos
+\U0001f4e1 Navegando Casa del Audio celulares P2: https://casadelaudio.com/tecnologia/celulares-y-accesorios.html?p=2
+   \u2192 P2: 6 productos
+\U0001f4e1 Navegando Casa del Audio celulares P3: https://casadelaudio.com/tecnologia/celulares-y-accesorios.html?p=3
+   \u2192 P3: 15 productos
+   \u2192 28 productos raw
+   \u2192 28 productos parseados
+   \u2705 celulares: 28 productos, 0 glitches, 4.61s
+\U0001f4e1 Fetching casadelaudio/smart-tv...
+\U0001f4e1 Navegando Casa del Audio smart-tv P1: https://casadelaudio.com/tv-y-audio/tv-y-video.html?p=1
+   \u2192 0 productos raw
+   \u2192 0 productos parseados
+   \u2705 smart-tv: 0 productos, 0 glitches, 2.27s
+
+=== CELULARES (28 prods) ===
+  - 0.0% OFF | $389,999 | Celular Samsung A16 6.7" 128GB NFC Negro
+  - 0.0% OFF | $199,999 | Celular Tecno Spark 30C 6.67" 128GB Negro
+  - 0.0% OFF | $149,289 | Celular Motorola G04S 6.5" 64GB Naranja
+  - 0.0% OFF | $549,999 | Celular Motorola G56 6.7"FHD+ NFC 256GB Negro
+  - 0.0% OFF | $449,999 | Celular Infinix Hot 60I 6.7"  256Gb Negro
+  - 0.0% OFF | $449,999 | Celular Infinix Hot 60I 6.7"  256Gb Plata
+  - 0.0% OFF | $289,999 | Celular Infinix Smart 10 6.7"  128Gb Negro
+  - 0.0% OFF | $349,900 | Celular Samsung A07  6.7"  128GB Black
+  - 0.0% OFF | $349,900 | Celular Samsung A07  6.7"  128GB Green
+  - 0.0% OFF | $299,900 | Celular Samsung A07  6.7"  64GB Black
+
+=== SMART-TV (0 prods) ===

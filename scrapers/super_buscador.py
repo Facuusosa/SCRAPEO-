@@ -2,17 +2,25 @@
 🔍 SUPER BUSCADOR — El Oráculo de los Precios Bajos
 Busca en todas las bases de datos locales al mismo tiempo.
 """
+import os
 import sqlite3
 import sys
 from datetime import datetime
 
+# Resolver paths absolutos para las DBs
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Resolver paths absolutos para las DBs
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_DIR = os.path.join(ROOT_DIR, "data", "databases")
+
 DB_FILES = {
-    "Fravega": "fravega_monitor.db",
-    "OnCity": "oncity_monitor.db",
-    "Cetrogar": "cetrogar_monitor.db",
-    "Megatone": "megatone_monitor.db",
-    "Newsan": "newsan_monitor.db",
-    "CasaDelAudio": "casadelaudio_monitor.db"
+    "Fravega": os.path.join(DB_DIR, "fravega_monitor.db"),
+    "OnCity": os.path.join(DB_DIR, "oncity_monitor.db"),
+    "Cetrogar": os.path.join(DB_DIR, "cetrogar_monitor.db"),
+    "Megatone": os.path.join(DB_DIR, "megatone_monitor.db"),
+    "Newsan": os.path.join(DB_DIR, "newsan_monitor.db"),
+    "CasaDelAudio": os.path.join(DB_DIR, "casadelaudio_monitor.db")
 }
 
 def buscar(query):
@@ -23,7 +31,7 @@ def buscar(query):
     print("-" * 80)
 
     for name, db_path in DB_FILES.items():
-        if not sqlite3.os.path.exists(db_path):
+        if not os.path.exists(db_path):
             continue
             
         try:
@@ -33,16 +41,19 @@ def buscar(query):
             # Handle schema differences
             name_col = "title" if name == "Fravega" else "name"
             brand_col = "brand_name" if name == "Fravega" else "brand"
+            url_col = "slug" if name == "Fravega" else "url"
             
             # Buscar productos que coincidan
-            rows = conn.execute(f"""
+            query_sql = f"""
                 SELECT {name_col} as name, {brand_col} as brand, last_price, list_price, 
                        (CASE WHEN list_price > last_price THEN ((list_price - last_price)/list_price)*100 ELSE 0 END) as discount_pct,
-                       (CASE WHEN "{name}" == "Fravega" THEN slug ELSE url END) as url
+                       {url_col} as url
                 FROM products 
-                WHERE {name_col} LIKE '%{query_clean}%'
+                WHERE {name_col} LIKE ?
                 ORDER BY last_price ASC
-            """).fetchall()
+            """
+            
+            rows = conn.execute(query_sql, (f'%{query_clean}%',)).fetchall()
             
             for r in rows:
                 all_results.append({

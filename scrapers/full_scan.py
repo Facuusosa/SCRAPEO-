@@ -3,7 +3,11 @@ Full Scrape + Analysis
 Scrapea TODAS las categorias y luego muestra las mejores oportunidades.
 """
 import sys, os, json, time
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Agregar el root del proyecto al path
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 from targets.fravega.sniffer_fravega import FravegaSniffer
 import logging

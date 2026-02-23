@@ -6,8 +6,13 @@ Orquestador total de Fravega, On City, Cetrogar, Megatone, Newsan y Casa del Aud
 import logging
 import time
 import sqlite3
+import sys
 import os
-from datetime import datetime
+
+# Agregar el root del proyecto al path para que encuentre 'targets' y 'core'
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 # Importar sniffers
 from targets.fravega.sniffer_fravega import FravegaSniffer
@@ -37,14 +42,18 @@ def run_master():
     start_time = time.time()
     logger.info("🚀 INICIANDO ESCANEO MAESTRO NACIONAL")
     
-    # Instanciar sniffers
+    # Directorio central de DBs
+    db_dir = os.path.join(PROJECT_ROOT, "data", "databases")
+    os.makedirs(db_dir, exist_ok=True)
+
+    # Instanciar sniffers con sus paths de DB específicos en data/databases
     sniffers = {
-        "Fravega": FravegaSniffer(),
-        "OnCity": OnCitySniffer(),
-        "Cetrogar": CetrogarSniffer(),
-        "Megatone": MegatoneSniffer(),
-        "Newsan": NewsanSniffer(),
-        "CasaDelAudio": CasaDelAudioSniffer()
+        "Fravega": FravegaSniffer(db_path=os.path.join(db_dir, "fravega_monitor.db")),
+        "OnCity": OnCitySniffer(db_path=os.path.join(db_dir, "oncity_monitor.db")),
+        "Cetrogar": CetrogarSniffer(db_path=os.path.join(db_dir, "cetrogar_monitor.db")),
+        "Megatone": MegatoneSniffer(db_path=os.path.join(db_dir, "megatone_monitor.db")),
+        "Newsan": NewsanSniffer(db_path=os.path.join(db_dir, "newsan_monitor.db")),
+        "CasaDelAudio": CasaDelAudioSniffer(db_path=os.path.join(db_dir, "casadelaudio_monitor.db"))
     }
     
     stats = {}

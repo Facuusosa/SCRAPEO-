@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Terminal as TerminalIcon, X, Maximize2, Minimize2, Circle, Activity } from "lucide-react";
+import { Terminal as TerminalIcon, Minimize2, Circle, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LogEntry {
@@ -14,16 +14,17 @@ interface LogEntry {
 
 export const SystemTerminal = () => {
     const [logs, setLogs] = useState<LogEntry[]>([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const [isMinimized, setIsMinimized] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const eventSource = new EventSource("/api/events");
+        const toggleTerminal = () => setIsVisible(prev => !prev);
+        window.addEventListener('toggle-terminal', toggleTerminal);
 
+        const eventSource = new EventSource("/api/events");
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
-
             if (data.type === 'log') {
                 const newLog: LogEntry = {
                     id: data.id || Math.random().toString(36),
@@ -36,11 +37,9 @@ export const SystemTerminal = () => {
             }
         };
 
-        eventSource.onerror = () => {
-            eventSource.close();
-        };
-
+        eventSource.onerror = () => eventSource.close();
         return () => {
+            window.removeEventListener('toggle-terminal', toggleTerminal);
             eventSource.close();
         };
     }, []);
@@ -51,6 +50,8 @@ export const SystemTerminal = () => {
         error: "text-red-500 font-bold",
         success: "text-emerald-500"
     };
+
+    if (!isVisible) return null;
 
     if (isMinimized) {
         return (
@@ -91,6 +92,12 @@ export const SystemTerminal = () => {
                     >
                         <Minimize2 size={14} />
                     </button>
+                    <button
+                        onClick={() => setIsVisible(false)}
+                        className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors text-slate-400"
+                    >
+                        <Circle size={10} className="fill-current" />
+                    </button>
                 </div>
             </div>
 
@@ -114,7 +121,7 @@ export const SystemTerminal = () => {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 bg-slate-50 flex items-center justify-between">
+            <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase">
                         <Circle size={8} className="fill-emerald-500 text-emerald-500" />

@@ -1,142 +1,134 @@
-import { LucideIcon, TrendingDown, Zap, BarChart3, ArrowUpRight, ArrowDownRight, Filter } from "lucide-react";
+import { LucideIcon, TrendingDown, Zap, BarChart3, ArrowUpRight, ArrowDownRight, ShieldCheck, Search } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { getUnifiedProducts } from "@/lib/db";
 import { cn } from "@/lib/utils";
 
 async function getStats() {
-  const products = await getUnifiedProducts(null, "", 5000); // Analizar 5k productos para stats reales
-  const glitches = products.filter(p => p.gap > 15 || p.discount_pct > 45);
-  const avgDiscount = products.length > 0
-    ? products.reduce((acc, p) => acc + (p.discount_pct || 0), 0) / products.length
+  const products = await getUnifiedProducts(null, "", 5000);
+  const opportunities = products.filter(p => p.gap_market > 12);
+  const avgOpportunity = opportunities.length > 0
+    ? opportunities.reduce((acc, p) => acc + (p.gap_market || 0), 0) / opportunities.length
     : 0;
 
   return {
     totalProducts: products.length,
-    glitchesFound: glitches.length,
-    avgDiscount: avgDiscount.toFixed(1),
+    glitchesFound: opportunities.length,
+    avgOpportunity: avgOpportunity.toFixed(1),
     activeSources: 6
   };
 }
 
 export default async function DashboardPage() {
-  const products = await getUnifiedProducts(null, "", 1000); // Mostrar top 1000 oportunidades
+  const products = await getUnifiedProducts(null, "", 1000);
   const stats = await getStats();
 
-  // Separar productos normales de glitches para el radar
+  // Radar de Oportunidades: Solo lo que realmente deja margen
   const highlightProducts = products
-    .filter(p => p.gap > 20 || p.discount_pct > 50)
-    .sort((a, b) => (b.gap || 0) - (a.gap || 0))
-    .slice(0, 12); // Mostrar más glitches en el radar superior
+    .filter(p => p.gap_market > 15)
+    .sort((a, b) => (b.gap_market || 0) - (a.gap_market || 0))
+    .slice(0, 8);
 
   return (
     <main className="min-h-screen pl-64 bg-slate-50">
       {/* Header / Top Bar */}
-      <div className="bg-white border-b border-slate-200 px-10 py-8">
+      <div className="bg-white border-b border-slate-200 px-10 py-12">
         <div className="flex justify-between items-end">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Mercado en Tiempo Real</span>
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Inteligencia de Arbitraje Activa</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Oportunidades de Arbitraje</h1>
-            <p className="text-slate-500 mt-1 max-w-xl">
-              Escaneando automáticamente múltiples fuentes para detectar anomalías de precio y oportunidades de reventa masivas.
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Oportunidades de Negocio</h1>
+            <p className="text-slate-500 mt-2 max-w-2xl font-medium">
+              Analizando en tiempo real el desvío de precios entre los 6 retailers más grandes de Argentina para detectar brechas de reventa inmediata.
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="flex items-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200">
-              Descargar Reporte
+            <button className="flex items-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
+              Exportar Oportunidades
               <ArrowUpRight size={14} />
             </button>
           </div>
         </div>
 
-        {/* Grid de Estadísticas */}
-        <div className="grid grid-cols-4 gap-6 mt-10">
+        {/* Grid de Métricas de Negocio */}
+        <div className="grid grid-cols-4 gap-6 mt-12">
           <StatCard
-            label="Productos Indexados"
+            label="Catálogo Monitoreado"
             value={stats.totalProducts.toLocaleString()}
-            icon={BarChart3}
-            trend="+1.2k hoy"
+            icon={Search}
+            trend="Artículos"
             trendUp={true}
           />
           <StatCard
-            label="Glitches Detectados"
+            label="Alertas de Arbitraje"
             value={stats.glitchesFound}
             icon={Zap}
-            trend="Críticos"
+            trend="Gaps Activos"
             trendUp={false}
             highlight={true}
           />
           <StatCard
-            label="Descuento Promedio"
-            value={`${stats.avgDiscount}%`}
+            label="Margen de Reventa Promedio"
+            value={`${stats.avgOpportunity}%`}
             icon={TrendingDown}
-            trend="Optimizado"
+            trend="Mercado"
             trendUp={true}
           />
           <StatCard
-            label="Nodos de Escaneo"
+            label="Retailers Conectados"
             value={stats.activeSources}
-            icon={Filter}
+            icon={ShieldCheck}
             trend="Sincronizados"
             trendUp={true}
           />
         </div>
       </div>
 
-      <div className="p-10 space-y-12">
-        {/* Sección Radar de Glitches */}
+      <div className="p-10 space-y-16">
+        {/* Radar de Ganancia Inmediata */}
         <section>
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 shadow-sm border border-red-50">
-                <Zap size={24} />
+              <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-emerald-100">
+                <TrendingDown size={28} />
               </div>
               <div>
-                <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Radar de Anomalías</h2>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Glitches de precio críticos detectados hoy</p>
+                <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none mb-1">Radar de Ganancia</h2>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Brechas superiores al 15% contra el mercado</p>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <select className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-600 outline-none focus:border-slate-900">
-                <option>Todas las Tiendas</option>
-                <option>Frávega</option>
-                <option>Megatone</option>
-                <option>Cetrogar</option>
-              </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {highlightProducts.length > 0 ? (
               highlightProducts.map((product, i) => (
                 <ProductCard key={i} product={product} />
               ))
             ) : (
-              <div className="col-span-full py-20 text-center animate-pulse">
-                <p className="text-slate-400 font-bold uppercase tracking-widest">Escaneando mercado en busca de glitches...</p>
+              <div className="col-span-full py-24 text-center bg-white rounded-3xl border border-dashed border-slate-200">
+                <p className="text-slate-400 font-bold uppercase tracking-widest italic">Calculando brechas de rentabilidad en tiempo real...</p>
               </div>
             )}
           </div>
         </section>
 
-        {/* Sección Mercado General */}
+        {/* Listado General de Mercado */}
         <section className="pb-24">
-          <div className="flex items-center justify-between mb-8 border-t border-slate-200 pt-12">
+          <div className="flex items-center justify-between mb-10 border-t border-slate-200 pt-16">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-900 shadow-sm border border-slate-50">
-                <BarChart3 size={24} />
+              <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-slate-200">
+                <BarChart3 size={28} />
               </div>
               <div>
-                <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Vista General del Mercado</h2>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Últimos productos indexados en el sistema</p>
+                <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none mb-1">Mercado Unificado</h2>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Últimos precios indexados por el monitor</p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.slice(0, 16).map((product, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products.slice(0, 20).map((product, i) => (
               <ProductCard key={i} product={product} />
             ))}
           </div>
@@ -156,32 +148,28 @@ function StatCard({ label, value, icon: Icon, trend, trendUp, highlight = false 
 }) {
   return (
     <div className={cn(
-      "p-6 rounded-3xl border transition-all duration-300 pro-shadow",
+      "p-8 rounded-3xl border transition-all duration-300 pro-shadow",
       highlight ? "bg-slate-900 border-slate-900 text-white" : "bg-white border-slate-200 text-slate-900"
     )}>
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-6">
         <div className={cn(
-          "w-10 h-10 rounded-xl flex items-center justify-center",
+          "w-12 h-12 rounded-2xl flex items-center justify-center",
           highlight ? "bg-white/10 text-white" : "bg-slate-50 text-slate-900"
         )}>
-          <Icon size={20} />
+          <Icon size={24} />
         </div>
         <div className={cn(
-          "flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full",
+          "flex items-center gap-1 text-[9px] font-black uppercase px-3 py-1.5 rounded-full tracking-widest",
           highlight ? "bg-white/10 text-white" : (trendUp ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600")
         )}>
-          {trendUp ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
           {trend}
         </div>
       </div>
       <div className="flex flex-col">
-        <span className={cn(
-          "text-[10px] font-bold uppercase tracking-widest",
-          highlight ? "text-slate-400" : "text-slate-400"
-        )}>
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">
           {label}
         </span>
-        <span className="text-2xl font-black tracking-tight">{value}</span>
+        <span className="text-3xl font-black tracking-tight">{value}</span>
       </div>
     </div>
   );

@@ -3,23 +3,17 @@
 import React from "react";
 import {
     LayoutDashboard,
-    Zap,
-    BarChart3,
-    History,
     Search,
     Shield,
-    Package
+    Terminal
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
-    { icon: LayoutDashboard, label: "Tablero", href: "/" },
-    { icon: Zap, label: "Radar GlITCH", href: "/glitches" },
-    { icon: Search, label: "Mercado Total", href: "/market" },
-    { icon: BarChart3, label: "Estadísticas", href: "/analytics" },
-    { icon: History, label: "Historial", href: "/history" },
+    { icon: LayoutDashboard, label: "Radar de Ofertas", href: "/" },
+    { icon: Search, label: "Explorador de Mercado", href: "/market" },
 ];
 
 export function Sidebar() {
@@ -38,9 +32,9 @@ export function Sidebar() {
                 </div>
             </div>
 
-            {/* Navegación Principal */}
+            {/* Navegación Principal - Solo 2 Links */}
             <nav className="flex-1 px-4 space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">Menú Principal</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">Navegación</p>
                 {menuItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
@@ -59,6 +53,16 @@ export function Sidebar() {
                         </Link>
                     );
                 })}
+
+                <div className="pt-10">
+                    <button
+                        onClick={() => window.dispatchEvent(new CustomEvent('toggle-terminal'))}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-slate-500 transition-all font-bold text-[10px] uppercase tracking-widest"
+                    >
+                        <Terminal size={14} />
+                        Acceso Sistema
+                    </button>
+                </div>
             </nav>
 
             {/* Status del Sistema */}
@@ -66,16 +70,7 @@ export function Sidebar() {
                 <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
                     <div className="flex items-center gap-2 mb-3">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-bold text-slate-500 uppercase">Sistema Activo</span>
-                    </div>
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-[11px]">
-                            <span className="text-slate-500">Bases de Datos</span>
-                            <span className="font-bold text-slate-900">6/6 Online</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="w-full h-full bg-emerald-500 rounded-full" />
-                        </div>
+                        <span className="text-[10px] font-bold text-slate-500 uppercase">Red Online</span>
                     </div>
                 </div>
             </div>

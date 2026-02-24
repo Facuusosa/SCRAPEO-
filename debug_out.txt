@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\Facun\OneDrive\Escritorio\FRAVEGA\targets\megatone\sniffer_megatone.py", line 52, in <module>
+    class MegatoneSniffer(BaseSniffer):
+    ...<127 lines>...
+            self.client.close()
+  File "C:\Users\Facun\OneDrive\Escritorio\FRAVEGA\targets\megatone\sniffer_megatone.py", line 60, in MegatoneSniffer
+    def __init__(self, db_path: Optional[str] = None):
+                                ^^^^^^^^
+NameError: name 'Optional' is not defined

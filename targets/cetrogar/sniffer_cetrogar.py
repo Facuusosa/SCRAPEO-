@@ -17,12 +17,17 @@ Ejemplo:
 """
 
 from __future__ import annotations
-
+import os
+import sys
 import logging
 import sqlite3
 import json
 from datetime import datetime
 from typing import Optional
+
+# Agregar el root del proyecto al path
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, PROJECT_ROOT)
 
 from core.base_sniffer import BaseSniffer, Product, Glitch
 from core.http_client import HttpClient
@@ -388,3 +393,19 @@ class CetrogarSniffer(BaseSniffer):
     def close(self):
         """Cerrar recursos."""
         self.client.close()
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Cetrogar Price Sniffer")
+    parser.add_argument("--daemon", action="store_true", help="Correr en loop infinito")
+    parser.add_argument("--interval", type=int, default=120, help="Segundos entre ciclos")
+    parser.add_argument("--categories", nargs="+", help="Categorías específicas")
+    args = parser.parse_args()
+    
+    cats = args.categories or list(CETROGAR_CATEGORIES.keys())
+    sniffer = CetrogarSniffer()
+    
+    if args.daemon:
+        sniffer.run_forever(cats, interval=args.interval)
+    else:
+        sniffer.run_cycle(cats)

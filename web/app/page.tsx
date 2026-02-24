@@ -4,27 +4,29 @@ import { getUnifiedProducts } from "@/lib/db";
 import { cn } from "@/lib/utils";
 
 async function getStats() {
-  const products = await getUnifiedProducts();
-  const glitches = products.filter(p => (p.z_score && p.z_score < -2.5) || p.discount_pct > 50);
-  const avgDiscount = products.reduce((acc, p) => acc + p.discount_pct, 0) / products.length;
+  const products = await getUnifiedProducts(null, "", 5000); // Analizar 5k productos para stats reales
+  const glitches = products.filter(p => p.gap > 15 || p.discount_pct > 45);
+  const avgDiscount = products.length > 0
+    ? products.reduce((acc, p) => acc + (p.discount_pct || 0), 0) / products.length
+    : 0;
 
   return {
     totalProducts: products.length,
     glitchesFound: glitches.length,
     avgDiscount: avgDiscount.toFixed(1),
-    activeSources: 4
+    activeSources: 6
   };
 }
 
 export default async function DashboardPage() {
-  const products = await getUnifiedProducts();
+  const products = await getUnifiedProducts(null, "", 1000); // Mostrar top 1000 oportunidades
   const stats = await getStats();
 
   // Separar productos normales de glitches para el radar
   const highlightProducts = products
-    .filter(p => (p.z_score && p.z_score < -2.0) || p.discount_pct > 40)
-    .sort((a, b) => (a.z_score || 0) - (b.z_score || 0))
-    .slice(0, 8);
+    .filter(p => p.gap > 20 || p.discount_pct > 50)
+    .sort((a, b) => (b.gap || 0) - (a.gap || 0))
+    .slice(0, 12); // Mostrar más glitches en el radar superior
 
   return (
     <main className="min-h-screen pl-64 bg-slate-50">

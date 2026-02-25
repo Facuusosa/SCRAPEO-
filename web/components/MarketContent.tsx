@@ -1,157 +1,298 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { Package, Search, SlidersHorizontal, ArrowUpDown, Filter, X } from "lucide-react";
+import {
+    Search,
+    ChevronDown,
+    ChevronRight,
+    Filter,
+    DollarSign,
+    X,
+    LayoutGrid,
+    PanelLeftClose,
+    PanelLeftOpen,
+    Menu,
+    AlertCircle,
+    Store,
+    Tag
+} from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { cn } from "@/lib/utils";
 
 interface MarketContentProps {
-    initialProducts: any[];
+    initialProducts: any[] | undefined;
+    allCategories: string[] | undefined;
 }
 
-export function MarketContent({ initialProducts }: MarketContentProps) {
+export function MarketContent({ initialProducts = [], allCategories = [] }: MarketContentProps) {
     const [products, setProducts] = useState(initialProducts);
     const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("all");
-    const [minGap, setMinGap] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(20000000); // 20M por defecto
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedStores, setSelectedStores] = useState<string[]>([]);
+    const [minProfit, setMinProfit] = useState<number>(0);
+    const [minPrice, setMinPrice] = useState<number>(0);
+    const [maxPrice, setMaxPrice] = useState<number>(20000000);
     const [sort, setSort] = useState("opportunity");
 
-    // SSE Integration (Priority 4: Optimistic UI)
-    useEffect(() => {
-        const eventSource = new EventSource("/api/events");
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'update' && data.product) {
-                // Agregar al principio sin recarga térmica (Optimistic UI)
-                setProducts(prev => {
-                    const exists = prev.find(p => p.url === data.product.url);
-                    if (exists) return prev;
-                    return [data.product, ...prev];
-                });
-            }
-        };
-        return () => eventSource.close();
-    }, []);
+    // UI State
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const categories = [
-        { id: "all", label: "Todos", icon: "💎" },
-        { id: "celular", label: "Celulares", icon: "📱" },
-        { id: "tv", label: "TV & Video", icon: "📺" },
-        { id: "clima", label: "Clima", icon: "❄️" },
-        { id: "notebook", label: "Notebooks", icon: "💻" },
-        { id: "electro", label: "Electro", icon: "🍳" }
-    ];
+    // Grouping categories (Master List) - REPARADO PARA COMPACIDAD
+    const mainCategories = useMemo(() => {
+        if (!allCategories || !Array.isArray(allCategories)) return [];
+        const uniqueMains = new Set<string>();
+        allCategories.forEach(cat => {
+            if (!cat || typeof cat !== 'string') return;
+            const main = cat.split('/')[0].replace(/-/g, ' ').toUpperCase();
+            if (main) uniqueMains.add(main);
+        });
+        return Array.from(uniqueMains).sort();
+    }, [allCategories]);
 
-    // Lógica de Filtrado Reactivo (Priority 3)
+    const activeStores = useMemo(() => {
+        const stores = new Set<string>();
+        if (products && Array.isArray(products)) {
+            products.forEach(p => { if (p?.store) stores.add(p.store); });
+        }
+        return Array.from(stores).sort();
+    }, [products]);
+
+    // Robust Filtering
     const filteredProducts = useMemo(() => {
+        if (!products || !Array.isArray(products)) return [];
+
         return products
             .filter(p => {
+                if (!p) return false;
+                const searchLower = search.toLowerCase();
                 const matchesSearch = !search ||
-                    p.name.toLowerCase().includes(search.toLowerCase()) ||
-                    p.brand?.toLowerCase().includes(search.toLowerCase());
+                    (p.name?.toLowerCase().includes(searchLower)) ||
+                    (p.brand?.toLowerCase().includes(searchLower)) ||
+                    (p.category?.toLowerCase().includes(searchLower));
+                if (!matchesSearch) return false;
 
-                const matchesCat = category === "all" ||
-                    (p.category && p.category.toLowerCase().includes(category)) ||
-                    (p.name && p.name.toLowerCase().includes(category));
+                const matchesCat = !selectedCategory ||
+                    (p.category && p.category.toLowerCase().includes(selectedCategory.toLowerCase().replace(/ /g, '-')));
+                if (!matchesCat) return false;
 
-                const matchesGap = (p.gap_market || 0) >= minGap;
-                const matchesPrice = p.price <= maxPrice;
+                const matchesStore = selectedStores.length === 0 || selectedStores.includes(p.store);
+                if (!matchesStore) return false;
 
-                return matchesSearch && matchesCat && matchesGap && matchesPrice;
+                const profitArs = (p.market_min && p.market_min > p.price) ? (p.market_min - p.price) : -1;
+                const matchesProfit = minProfit <= 0 || (profitArs >= minProfit);
+                if (!matchesProfit) return false;
+
+                const price = p.price || 0;
+                const matchesPrice = price >= minPrice && (maxPrice <= 0 || price <= maxPrice);
+                if (!matchesPrice) return false;
+
+                return true;
             })
             .sort((a, b) => {
                 if (sort === "opportunity") return (b.gap_market || 0) - (a.gap_market || 0);
                 if (sort === "price_asc") return a.price - b.price;
                 return 0;
             });
-    }, [products, search, category, minGap, maxPrice, sort]);
+    }, [products, search, selectedCategory, selectedStores, minProfit, minPrice, maxPrice, sort]);
 
-    return (
-        <div className="flex flex-col min-h-screen">
-            {/* Toolbar Superior */}
-            <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-10 py-6">
-                <div className="flex flex-col lg:flex-row gap-6">
-                    <div className="relative flex-1 group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={20} />
-                        <input
-                            type="text"
-                            placeholder="Buscar en el catálogo unificado..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-slate-50 border border-slate-200 py-3.5 pl-12 pr-6 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all font-medium"
-                        />
-                    </div>
+    useEffect(() => {
+        const eventSource = new EventSource("/api/events");
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'update' && data.product) {
+                    setProducts(prev => {
+                        if (prev.find(p => p.url === data.product.url)) return prev;
+                        return [data.product, ...prev];
+                    });
+                }
+            } catch (e) { console.error("Real-time error:", e); }
+        };
+        return () => eventSource.close();
+    }, []);
 
-                    <div className="flex items-center gap-3">
-                        <select
-                            value={sort}
-                            onChange={(e) => setSort(e.target.value)}
-                            className="bg-white border border-slate-200 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest outline-none focus:border-slate-900 transition-all"
-                        >
-                            <option value="opportunity">Mayor Oportunidad</option>
-                            <option value="price_asc">Más Barato</option>
-                        </select>
-                    </div>
+    const SidebarContent = () => (
+        <div className="flex flex-col h-full bg-white">
+            {/* Header Filtros Compacto */}
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
+                <div className="flex items-center gap-2">
+                    <Filter size={16} className="text-blue-600" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 font-geist">Filtros Activos</span>
                 </div>
-
-                {/* Filtros de Negocio Rápidos */}
-                <div className="flex flex-wrap items-center gap-2 mt-6">
-                    {categories.map(c => (
-                        <button
-                            key={c.id}
-                            onClick={() => setCategory(c.id)}
-                            className={cn(
-                                "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                                category === c.id ? "bg-slate-900 text-white shadow-lg" : "bg-white border border-slate-200 text-slate-500 hover:border-slate-900"
-                            )}
-                        >
-                            <span>{c.icon}</span>
-                            {c.label}
-                        </button>
-                    ))}
-
-                    <div className="h-6 w-px bg-slate-200 mx-2" />
-
-                    {[10, 20, 30].map(gap => (
-                        <button
-                            key={gap}
-                            onClick={() => setMinGap(minGap === gap ? 0 : gap)}
-                            className={cn(
-                                "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                                minGap === gap ? "bg-emerald-600 text-white" : "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                            )}
-                        >
-                            +{gap}% Margen
-                        </button>
-                    ))}
-                </div>
+                <button onClick={() => setIsSidebarOpen(false)} className="hidden lg:block text-slate-400 hover:text-slate-900 transition-colors">
+                    <PanelLeftClose size={18} />
+                </button>
             </div>
 
-            {/* Grid de Productos */}
-            <div className="p-10 flex-1">
-                <div className="flex items-center justify-between mb-10">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                        Mostrando <span className="text-slate-900">{filteredProducts.length}</span> resultados de reventa
-                    </p>
+            <div className="flex-1 overflow-y-auto p-5 space-y-6 scrollbar-hide">
+                {/* Search Compacto */}
+                <div className="relative group">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={12} />
+                    <input
+                        type="text"
+                        placeholder="Buscar producto..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 py-2.5 pl-9 pr-4 rounded-xl text-[11px] font-bold outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all font-geist"
+                    />
                 </div>
 
-                {filteredProducts.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        {filteredProducts.map((p, i) => (
-                            <ProductCard key={i} product={p} />
+                {/* Categorías en FILA (Lista Compacta) */}
+                <div className="space-y-3">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <Tag size={10} /> Categorías del Mercado
+                    </label>
+                    <div className="flex flex-col gap-1">
+                        <button
+                            onClick={() => setSelectedCategory(null)}
+                            className={cn(
+                                "w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all",
+                                !selectedCategory ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:bg-slate-100"
+                            )}
+                        >
+                            Ver Todo
+                        </button>
+                        <div className="border-t border-slate-50 my-1" />
+                        <div className="space-y-[2px]"> {/* Espaciado Mínimo */}
+                            {mainCategories.map(cat => (
+                                <button
+                                    key={cat}
+                                    onClick={() => setSelectedCategory(cat)}
+                                    className={cn(
+                                        "w-full text-left px-3 py-1.5 rounded-md text-[10px] font-bold transition-all flex items-center justify-between group",
+                                        selectedCategory === cat ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-50"
+                                    )}
+                                >
+                                    <span className="truncate pr-2">{cat}</span>
+                                    {selectedCategory === cat && <ChevronRight size={10} className="text-white" />}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tiendas Compactas */}
+                <div className="space-y-3">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <Store size={10} /> Retailers
+                    </label>
+                    <div className="grid grid-cols-1 gap-1">
+                        {activeStores.map(store => (
+                            <button
+                                key={store}
+                                onClick={() => {
+                                    setSelectedStores(prev =>
+                                        prev.includes(store) ? prev.filter(s => s !== store) : [...prev, store]
+                                    );
+                                }}
+                                className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-lg text-[10px] font-bold transition-all text-left",
+                                    selectedStores.includes(store)
+                                        ? "bg-slate-900 text-white"
+                                        : "bg-white border border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-900"
+                                )}
+                            >
+                                <span className={cn("w-1.5 h-1.5 rounded-full", selectedStores.includes(store) ? "bg-blue-400" : "bg-slate-200")} />
+                                {store}
+                            </button>
                         ))}
                     </div>
-                ) : (
-                    <div className="py-32 flex flex-col items-center justify-center bg-white rounded-[40px] border border-dashed border-slate-200">
-                        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mb-6">
-                            <Search size={32} />
-                        </div>
-                        <p className="text-slate-400 font-black uppercase tracking-widest">Sin resultados</p>
-                        <button onClick={() => { setSearch(""); setCategory("all"); setMinGap(0); }} className="mt-4 text-blue-600 text-[10px] font-black uppercase tracking-widest underline underline-offset-4">Limpiar Filtros</button>
+                </div>
+
+                {/* Margen */}
+                <div className="pt-4 border-t border-slate-100 space-y-3">
+                    <label className="text-[9px] font-black text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                        <DollarSign size={10} /> Margen Mínimo (ARS)
+                    </label>
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-600 font-bold text-xs">$</span>
+                        <input
+                            type="number"
+                            value={minProfit || ""}
+                            onChange={(e) => setMinProfit(Number(e.target.value))}
+                            placeholder="0"
+                            className="w-full bg-emerald-50/30 border border-emerald-100 py-2.5 pl-7 pr-4 rounded-xl text-[11px] font-black text-emerald-700 outline-none focus:border-emerald-500 transition-all"
+                        />
                     </div>
-                )}
+                </div>
             </div>
+        </div>
+    );
+
+    return (
+        <div className="flex w-full h-[calc(100vh-140px)] overflow-hidden bg-white">
+            {/* Sidebar Desktop Compacto */}
+            {isSidebarOpen ? (
+                <aside className="hidden lg:block w-64 flex-shrink-0 h-full border-r border-slate-100 z-10 transition-all duration-300">
+                    <SidebarContent />
+                </aside>
+            ) : null}
+
+            {/* Mobile Menu */}
+            {isMobileMenuOpen && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/60 lg:hidden" onClick={() => setIsMobileMenuOpen(false)}>
+                    <div className="absolute left-0 top-0 bottom-0 w-64 bg-white" onClick={e => e.stopPropagation()}>
+                        <SidebarContent />
+                    </div>
+                </div>
+            )}
+
+            {/* Main Area */}
+            <main className="flex-1 flex flex-col h-full bg-slate-50/30 min-w-0 transition-all duration-300">
+                {/* Internal Toolbar Compacto */}
+                <div className="bg-white px-8 py-4 border-b border-slate-100 flex items-center justify-between shadow-sm z-20">
+                    <div className="flex items-center gap-4">
+                        {!isSidebarOpen && (
+                            <button
+                                onClick={() => setIsSidebarOpen(true)}
+                                className="hidden lg:flex p-2 bg-slate-900 text-white rounded-lg hover:scale-105 active:scale-95 transition-all"
+                            >
+                                <PanelLeftOpen size={16} />
+                            </button>
+                        )}
+                        <button
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            className="lg:hidden p-2 bg-slate-100 text-slate-600 rounded-lg"
+                        >
+                            <Menu size={16} />
+                        </button>
+                        <div className="flex items-center gap-3">
+                            <div className="h-4 w-1 bg-blue-600 rounded-full" />
+                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest uppercase">
+                                {filteredProducts.length} Activos
+                            </span>
+                        </div>
+                    </div>
+
+                    <select
+                        value={sort}
+                        onChange={(e) => setSort(e.target.value)}
+                        className="bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest outline-none cursor-pointer hover:border-slate-900 transition-all"
+                    >
+                        <option value="opportunity">ORDENAR POR MARGEN</option>
+                        <option value="price_asc">ORDENAR POR PRECIO</option>
+                    </select>
+                </div>
+
+                {/* Content Grid */}
+                <div className="flex-1 overflow-y-auto p-8 scrollbar-hide">
+                    {filteredProducts.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 pb-20">
+                            {filteredProducts.map((p, i) => (
+                                <div key={i} className="h-[520px]">
+                                    <ProductCard product={p} />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="h-full flex flex-col items-center justify-center bg-white rounded-[32px] border border-dashed border-slate-200 m-4">
+                            <AlertCircle size={32} className="text-slate-200 mb-4" />
+                            <h3 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Sin resultados</h3>
+                        </div>
+                    )}
+                </div>
+            </main>
         </div>
     );
 }

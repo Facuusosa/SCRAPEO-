@@ -5,19 +5,40 @@ import { NextRequest } from "next/server";
 let clients: ReadableStreamDefaultController[] = [];
 
 export async function GET() {
+    let isClosed = false;
+
     const stream = new ReadableStream({
         start(controller) {
             clients.push(controller);
 
             const heartbeat = setInterval(() => {
-                controller.enqueue(`data: ${JSON.stringify({ type: 'heartbeat' })}\n\n`);
+                if (isClosed) {
+                    clearInterval(heartbeat);
+                    return;
+                }
+
+                try {
+                    controller.enqueue(`data: ${JSON.stringify({ type: 'heartbeat' })}\n\n`);
+                } catch (e) {
+                    isClosed = true;
+                    clearInterval(heartbeat);
+                }
             }, 15000);
 
             // Clean up on close
             return () => {
+                isClosed = true;
                 clearInterval(heartbeat);
                 clients = clients.filter(c => c !== controller);
+                try {
+                    controller.close();
+                } catch (e) {
+                    // Ignore errors if already closed
+                }
             };
+        },
+        cancel() {
+            isClosed = true;
         }
     });
 

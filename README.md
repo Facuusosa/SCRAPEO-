@@ -50,43 +50,86 @@ FRAVEGA/
 
 ## 🚀 Inicio Rápido
 
+### V2 (Recomendado - Con Stock Validation)
+
 ```bash
-# 1. Iniciar el monitoreo de Frávega
+# 1. Iniciar el sniffer V2 (con validación de stock)
+python targets/fravega/sniffer_fravega_v2.py
+
+# 2. O correr múltiples sniffers con el bridge mejorado
+python web/bridge_v2.py --sniffers fravega --versions v2
+
+# 3. Ver alertas en consola (stdout)
+# Las oportunidades confirmadas aparecen con 🚀
+```
+
+### V1 (Legacy - Solo detección de glitches)
+
+```bash
 python targets/fravega/sniffer_fravega.py
-
-# 2. Ver alertas en consola
-python tools/dashboard.py
-
-# 3. Generar reporte HTML
-python tools/generate_report.py
 ```
 
-## 📡 Flujo del Sistema
+## 📡 Flujo del Sistema V2 (Nuevo)
 
 ```
-[API Target] → [Sniffer] → [Detección de Anomalías] → [DB SQLite]
-                                    ↓
-                            [¿Es un glitch?]
-                              /         \
-                           Sí            No
-                           ↓              ↓
-                     [ALERTA]        [Guardar dato]
-                     (Telegram/WA)    (histórico)
+[GraphQL API] → [Candidato: Gap >= 18%?]
+                          ↓
+                [Margen Odiseo: (Gap - 5%) >= 10%?]
+                          ↓
+            [Stock Validator (Playwright)]
+                          ↓
+            [OPORTUNIDAD CONFIRMADA]
+                          ↓
+            [DB SQLite + Alerta]
+            (Telegram/Discord/WebSocket)
 ```
+
+**Cambio clave:** Solo alertamos oportunidades **CONFIRMADAS** (stock real validado).
+
+---
+
+## 🔄 Comparación V1 vs V2
+
+| Aspecto | V1 | V2 |
+|--------|----|----|
+| **Detección** | Glitches (anomalías) | Oportunidades (arbitrage) |
+| **Stock** | Asumido (API) | Validado (Playwright) |
+| **Margen** | No calcula | Neto (Gap - 5%) |
+| **Alertas** | Potenciales | Confirmadas |
+| **Falsos positivos** | Altos | Bajos |
+| **Speed** | ~1s/producto | ~10-15s/producto |
+| **Ideal para** | Análisis / Research | SaaS / Trading |
 
 ## 🔮 Roadmap
 
+### ✅ Fase 1: MVP (Feb 2026)
 - [x] Sniffer Frávega (API GraphQL)
-- [x] Detección de glitches (heurísticas)
-- [x] Persistencia SQLite
-- [x] Dashboard + Reportes HTML
-- [ ] **Alertas push** (Telegram / WhatsApp)
-- [ ] **Módulo core compartido** (base_sniffer abstracto)
-- [ ] **Segundo target** (MercadoLibre / Garbarino)
-- [ ] **Comparador cross-ecommerce** (mismo producto, distintos e-commerce)
-- [ ] **Evasión avanzada** (JA3 / curl_cffi)
-- [ ] **Verifier** (Playwright, validación en carrito real)
-- [ ] **Docker** (deploy 24/7 en la nube)
+- [x] Stock Validator (Playwright)
+- [x] Margen Odiseo (Gap - 5%)
+- [x] Bridge V2 (orquestador multi-sniffer)
+- [x] Persistencia SQLite (opportunities table)
+- [x] Documentación refactor (REFACTOR_V2_INTEGRATION.md)
+
+### 🚀 Fase 2: SaaS Ready (Mar 2026)
+- [ ] **Alertas push** (Telegram / WhatsApp / Discord)
+- [ ] **WebSocket** (dashboard real-time)
+- [ ] **Segundo target** (Cetrogar V2 / Megatone V2)
+- [ ] **Comparador cross-ecommerce** (arbitrage multi-tienda)
+- [ ] **Worker pool async** (5-10 Playwright workers en paralelo)
+- [ ] **Railway deployment** (con env vars + Dockerfile)
+
+### 🔮 Fase 3: Escala (Apr 2026)
+- [ ] **Predictor ML** (glitch probability scores)
+- [ ] **Price history analysis** (detectar tendencias)
+- [ ] **User dashboard** ($30k VIP tier + $100k PRO tier)
+- [ ] **API pública** (webhooks para partners)
+- [ ] **Tercera/cuarta tienda** (OnCity V2 / Garbarino)
+
+### 💎 Fase 4: Enterprise (May 2026+)
+- [ ] **Multi-country expansion** (Brasil, Chile, Uruguay)
+- [ ] **IA avanzada** (predicción de precios)
+- [ ] **Integraciones** (accounting, CRM, logistics)
+- [ ] **Mobile app** (iOS + Android)
 
 ## 📑 Documentación
 

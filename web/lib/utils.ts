@@ -17,7 +17,7 @@ const STORE_DOMAINS: Record<string, string> = {
 export function sanitizeUrl(url: string, store: string) {
     if (!url) return "#";
 
-    let cleanUrl = url.trim();
+    const cleanUrl = url.trim();
 
     // Si ya es absoluta, verificar protocolo
     if (cleanUrl.startsWith("http")) return cleanUrl;

@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { Store, AlertTriangle, Shield, Zap, DollarSign, Bomb } from "lucide-react";
 import { cn, sanitizeUrl } from "@/lib/utils";
 
-interface Product {
+export interface Product {
   name: string;
   price: number;
   list_price: number;
@@ -13,6 +13,7 @@ interface Product {
   img: string;
   url: string;
   store: string;
+  category?: string;
   market_min?: number;
   market_average?: number;
   gap_market?: number;
@@ -39,11 +40,11 @@ export const ProductCard = ({ product, isBomb = false }: { product: Product, isB
   const savingsPct = marketRef > 0 ? (savingsArs / marketRef) * 100 : 0;
 
   // Mocked stock timer for visual effect as requested
-  const [timeLeft, setTimeLeft] = useState(Math.floor(Math.random() * 60) + 10);
+  const [timeLeft, setTimeLeft] = useState<number>(Math.floor(Math.random() * 60) + 10);
   useEffect(() => {
     if (!isBomb) return;
     const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimeLeft((prev: number) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
   }, [isBomb]);
@@ -68,7 +69,7 @@ export const ProductCard = ({ product, isBomb = false }: { product: Product, isB
           src={product.img || "/placeholder.png"}
           alt={product.name}
           className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
-          onError={(e) => (e.currentTarget.src = "https://placehold.co/400x300?text=Sin+Imagen")}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => (e.currentTarget.src = "https://placehold.co/400x300?text=Sin+Imagen")}
         />
 
         <div className="absolute top-3 left-3 z-10">
@@ -170,7 +171,7 @@ export const ProductCard = ({ product, isBomb = false }: { product: Product, isB
         <div className="mt-auto pt-2">
           <div className="flex flex-col mb-4">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest uppercase">PRECIO ODISEO</span>
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">PRECIO ODISEO</span>
               <span className={cn(
                 "text-[8px] font-bold px-2 py-0.5 rounded-full",
                 isBomb ? "bg-red-500/20 text-red-500" : "bg-emerald-50 text-emerald-600"

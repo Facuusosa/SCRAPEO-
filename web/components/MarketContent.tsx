@@ -19,16 +19,16 @@ import {
     TrendingUp,
     Bomb
 } from "lucide-react";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductCard, Product } from "@/components/ProductCard";
 import { cn } from "@/lib/utils";
 
 interface MarketContentProps {
-    initialProducts: any[] | undefined;
+    initialProducts: Product[] | undefined;
     allCategories: string[] | undefined;
 }
 
 export function MarketContent({ initialProducts = [], allCategories = [] }: MarketContentProps) {
-    const [products, setProducts] = useState(initialProducts);
+    const [products, setProducts] = useState<Product[]>(initialProducts);
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedStores, setSelectedStores] = useState<string[]>([]);
@@ -46,7 +46,7 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
     const mainCategories = useMemo(() => {
         if (!allCategories || !Array.isArray(allCategories)) return [];
         const uniqueMains = new Set<string>();
-        allCategories.forEach(cat => {
+        allCategories.forEach((cat: string) => {
             if (!cat || typeof cat !== 'string') return;
             const main = cat.split('/')[0].replace(/-/g, ' ').toUpperCase();
             if (main) uniqueMains.add(main);
@@ -57,7 +57,7 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
     const activeStores = useMemo(() => {
         const stores = new Set<string>();
         if (products && Array.isArray(products)) {
-            products.forEach(p => { if (p?.store) stores.add(p.store); });
+            products.forEach((p: Product) => { if (p?.store) stores.add(p.store); });
         }
         return Array.from(stores).sort();
     }, [products]);
@@ -65,7 +65,7 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
     const activeBrands = useMemo(() => {
         const brands = new Set<string>();
         if (products && Array.isArray(products)) {
-            products.forEach(p => { if (p?.brand) brands.add(p.brand); });
+            products.forEach((p: Product) => { if (p?.brand) brands.add(p.brand); });
         }
         return Array.from(brands).sort().slice(0, 30); // Limite para no saturar
     }, [products]);
@@ -77,7 +77,7 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
         if (!products || !Array.isArray(products)) return [];
 
         return products
-            .filter(p => {
+            .filter((p: Product) => {
                 if (!p) return false;
                 const searchLower = search.toLowerCase();
                 const matchesSearch = !search ||
@@ -110,7 +110,7 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
 
                 return true;
             })
-            .sort((a, b) => {
+            .sort((a: Product, b: Product) => {
                 if (sort === "opportunity") return (b.gap_market || 0) - (a.gap_market || 0);
                 if (sort === "price_asc") return a.price - b.price;
                 return 0;
@@ -120,14 +120,14 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
     // ZONA DE BOMBAS (Top 4 por mayor porcentaje de Gap)
     const bombas = useMemo(() => {
         return products
-            .filter(p => (p.gap_market || 0) >= 1)
-            .sort((a, b) => (b.gap_market || 0) - (a.gap_market || 0))
+            .filter((p: Product) => (p.gap_market || 0) >= 1)
+            .sort((a: Product, b: Product) => (b.gap_market || 0) - (a.gap_market || 0))
             .slice(0, 4);
     }, [products]);
 
     useEffect(() => {
         const eventSource = new EventSource("/api/events");
-        eventSource.onmessage = (event) => {
+        eventSource.onmessage = (event: MessageEvent) => {
             try {
                 const data = JSON.parse(event.data);
                 // Si el evento dice que hay que refrescar (oportunidad o log importante)
@@ -136,9 +136,9 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
                     fetch("/api/radar?limit=100")
                         .then(res => res.json())
                         .then(d => {
-                            if (d.success) setProducts(prev => {
+                            if (d.success) setProducts((prev: Product[]) => {
                                 // Mergear evitando duplicados
-                                const newItems = d.items.filter((ni: any) => !prev.find(p => p.url === ni.url));
+                                const newItems = d.items.filter((ni: Product) => !prev.find((p: Product) => p.url === ni.url));
                                 return [...newItems, ...prev];
                             });
                         });
@@ -146,8 +146,8 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
 
                 // Si el evento trae un producto directamente
                 if (data.type === 'opportunity' && data.product) {
-                    setProducts(prev => {
-                        if (prev.find(p => p.url === data.product.url)) return prev;
+                    setProducts((prev: Product[]) => {
+                        if (prev.find((p: Product) => p.url === data.product.url)) return prev;
                         return [data.product, ...prev];
                     });
                 }
@@ -160,8 +160,8 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
     const [openSections, setOpenSections] = useState<string[]>(["categories", "radar"]);
 
     const toggleSection = (section: string) => {
-        setOpenSections(prev =>
-            prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]
+        setOpenSections((prev: string[]) =>
+            prev.includes(section) ? prev.filter((s: string) => s !== section) : [...prev, section]
         );
     };
 
@@ -245,7 +245,7 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
                                         max="500000"
                                         step="5000"
                                         value={minProfit}
-                                        onChange={(e) => setMinProfit(Number(e.target.value))}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinProfit(Number(e.target.value))}
                                         className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                                     />
                                 </div>
@@ -408,8 +408,8 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-                                {bombas.map((p, i) => (
-                                    <div key={i} className="transform hover:scale-[1.02] transition-transform duration-500 group">
+                                {bombas.map((p) => (
+                                    <div key={p.url || p.name} className="transform hover:scale-[1.02] transition-transform duration-500 group">
                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-amber-500 rounded-[26px] blur opacity-40 group-hover:opacity-75 transition duration-500"></div>
                                         <ProductCard product={p} isBomb={true} />
                                     </div>
@@ -436,8 +436,8 @@ export function MarketContent({ initialProducts = [], allCategories = [] }: Mark
 
                         {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
-                                {filteredProducts.map((p, i) => (
-                                    <div key={i} className="h-auto transform transition-all duration-300">
+                                {filteredProducts.map((p) => (
+                                    <div key={p.url || p.name} className="h-auto transform transition-all duration-300">
                                         <ProductCard product={p} />
                                     </div>
                                 ))}

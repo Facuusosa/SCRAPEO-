@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Loader2, TrendingDown, Store, DollarSign, ExternalLink } from "lucide-react";
+import { Loader2, TrendingDown, Store, DollarSign, ExternalLink, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProductCard } from "./ProductCard";
 
 interface RadarItem {
     name: string;
@@ -68,70 +69,42 @@ export function RadarExplore({ userTier }: { userTier: string }) {
 
     return (
         <div className="space-y-8">
-            <div className="flex justify-between items-center">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
-                        <TrendingDown size={24} />
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-10 rounded-[40px] border border-slate-200 shadow-sm mb-12">
+                <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-slate-900 rounded-[22px] flex items-center justify-center text-white shadow-xl shadow-slate-200">
+                        <TrendingDown size={32} />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold">Radar de Ganancia Híbrido</h2>
-                        <p className="text-sm text-slate-400">Mostrando {items.length} de {total} oportunidades detectadas</p>
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.3em] bg-emerald-50 px-2 py-0.5 rounded">Live</span>
+                            <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">Radar de Ganancia <span className="text-emerald-500 italic">Híbrido</span></h2>
+                        </div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                            Explorando {total.toLocaleString()} oportunidades detectadas por inteligencia artificial
+                        </p>
                     </div>
+                </div>
+                <div className="flex flex-col items-end">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Frecuencia de escaneo</span>
+                    <span className="text-sm font-black text-slate-900">Tiempo Real (2s)</span>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {items.map((item, idx) => {
-                    const profit = item.market_min ? item.market_min - item.price : 0;
-                    return (
-                        <div key={`${item.name}-${idx}`} className="group bg-white/5 border border-white/10 rounded-[24px] overflow-hidden hover:border-emerald-500/30 transition-all flex flex-col">
-                            <div className="aspect-square bg-white p-6 relative flex items-center justify-center">
-                                <img src={item.img} alt={item.name} className="max-h-full max-w-full object-contain" />
-                                <div className="absolute top-4 left-4">
-                                    <div className="bg-slate-900 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-2">
-                                        <Store size={10} /> {item.store}
-                                    </div>
-                                </div>
-                                {item.gap_market > 0 && (
-                                    <div className="absolute top-4 right-4">
-                                        <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase shadow-lg">
-                                            GAP {item.gap_market.toFixed(0)}%
-                                        </div>
-                                    </div>
-                                )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+                {items.length > 0 ? (
+                    items.map((item, idx) => (
+                        <ProductCard key={`${item.name}-${idx}`} product={item} />
+                    ))
+                ) : !loading && (
+                    <div className="col-span-full py-32 text-center bg-white rounded-[40px] border border-dashed border-slate-200">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center animate-spin text-slate-300">
+                                <TrendingDown size={20} />
                             </div>
-                            <div className="p-6 flex-1 flex flex-col">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{item.brand}</span>
-                                    {item.discount_pct > 0 && <span className="text-[10px] font-bold text-emerald-500">-{item.discount_pct}% OFF</span>}
-                                </div>
-                                <h3 className="font-bold text-slate-200 line-clamp-2 mb-4 group-hover:text-white transition-colors">{item.name}</h3>
-
-                                <div className="mt-auto space-y-4">
-                                    <div className="bg-white/5 rounded-xl p-3 flex justify-between items-center border border-white/5">
-                                        <div className="text-xs text-slate-500 uppercase font-bold tracking-wider">Precio</div>
-                                        <div className="text-lg font-black text-white">{formatPrice(item.price)}</div>
-                                    </div>
-
-                                    {profit > 0 && (
-                                        <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs px-1">
-                                            <DollarSign size={14} />
-                                            <span>Ganancia est. {formatPrice(profit)}</span>
-                                        </div>
-                                    )}
-
-                                    <a
-                                        href={item.url}
-                                        target="_blank"
-                                        className="w-full py-3 bg-white/10 hover:bg-emerald-500 hover:text-black rounded-xl text-center text-xs font-bold transition-all flex items-center justify-center gap-2"
-                                    >
-                                        VER EN TIENDA <ExternalLink size={14} />
-                                    </a>
-                                </div>
-                            </div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Sincronizando brechas de rentabilidad...</p>
                         </div>
-                    );
-                })}
+                    </div>
+                )}
             </div>
 
             {loading && (

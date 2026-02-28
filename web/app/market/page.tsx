@@ -6,9 +6,9 @@ import fs from "fs";
 import path from "path";
 
 export default async function MarketPage() {
-    // Priority 2: 'Mercado Total' debe traer todos los productos (limit 1000)
+    // Priority 2: 'Mercado Total' debe traer todos los productos (limit 10000 para explorador completo)
     // El filtrado posterior se hace en el cliente para respuesta instantánea (Priority 3)
-    const products = await getUnifiedProducts(null, "", 1000);
+    const products = await getUnifiedProducts(null, "", 10000);
 
     // CRÍTICO 1: Cargar categorías maestras para evitar catálogo oculto
     let allCategories: string[] = [];

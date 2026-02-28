@@ -3,41 +3,105 @@ import path from "path";
 import fs from "fs";
 
 // Mapeo de bases de datos
-const ROOT_DIR = path.resolve(process.cwd(), "..");
+const CWD = process.cwd();
+const ROOT_DIR = CWD.endsWith('web') ? path.resolve(CWD, "..") : CWD;
 const DB_DIR = path.join(ROOT_DIR, "data", "databases");
 
 const STORES = {
-    fravega: "Fravega",
-    oncity: "OnCity",
-    cetrogar: "Cetrogar",
-    megatone: "Megatone",
-    newsan: "Newsan",
-    casadelaudio: "Casa del Audio"
+    fravega: {
+        name: "Fravega",
+        paths: [
+            "targets/fravega/fravega_monitor_v2.db",
+            "targets/fravega/fravega_monitor.db",
+            "data/databases/fravega_monitor.db"
+        ]
+    },
+    oncity: {
+        name: "OnCity",
+        paths: [
+            "oncity_monitor.db",
+            "data/databases/oncity_monitor.db"
+        ]
+    },
+    cetrogar: {
+        name: "Cetrogar",
+        paths: [
+            "cetrogar_monitor.db",
+            "data/databases/cetrogar_monitor.db"
+        ]
+    },
+    megatone: {
+        name: "Megatone",
+        paths: [
+            "megatone_monitor.db",
+            "data/databases/megatone_monitor.db"
+        ]
+    },
+    newsan: {
+        name: "Newsan",
+        paths: [
+            "newsan_monitor.db",
+            "data/databases/newsan_monitor.db"
+        ]
+    },
+    casadelaudio: {
+        name: "Casa del Audio",
+        paths: [
+            "casadelaudio_monitor.db",
+            "data/databases/casadelaudio_monitor.db"
+        ]
+    }
 };
 
 /**
  * 🧠 MOTOR DE MATCHING SEMÁNTICO V2
  */
 function makeSemanticKey(name: string) {
-    if (!name) return "";
+    if (!name) return "null_key_" + Math.random();
     let key = name.toLowerCase();
-    const noise = ["celular", "smartphone", "smart", "tv", "led", "oled", "pulgadas", "monitor", "notebook"];
+
+    // 1. Limpieza de ruido comercial (solo palabras muy genéricas)
+    const noise = ["celular", "smartphone", "smart", "tv", "led", "oled", "pulgadas", "monitor", "notebook", "nuevo", "oferta"];
     const noiseRegex = new RegExp(`\\b(${noise.join("|")})\\b`, "gi");
-    key = key.replace(noiseRegex, "").replace(/[^a-z0-9 ]/g, " ");
-    const tokens = key.split(/\s+/).filter(t => t.length > 1);
-    return tokens.sort().join("");
+    key = key.replace(noiseRegex, " ");
+
+    // 2. Extraer modelo (Letras + Números es clave en tech)
+    // Ej: "G34", "S23", "A54", "12GB", "256GB"
+    const modelParts = key.match(/[a-z0-9]{2,}/g) || [];
+
+    if (modelParts.length < 2) {
+        // Si el nombre es muy corto, no arriesgamos matching: usamos el nombre completo sanitizado
+        return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    return modelParts.sort().join("");
 }
 
 export function getUnifiedProducts(category = null, search = "", limit = 500, offset = 0, isGlitchRadar = false) {
     const allProducts: any[] = [];
     const marketMap: Record<string, any[]> = {};
 
-    for (const [id, storeName] of Object.entries(STORES)) {
-        const dbPath = path.join(DB_DIR, `${id}_monitor.db`);
-        if (!fs.existsSync(dbPath)) continue;
+    for (const [id, config] of Object.entries(STORES)) {
+        let dbPath = "";
+
+        // Buscar el primer path que exista
+        for (const p of (config as any).paths) {
+            const fullPath = path.resolve(ROOT_DIR, p);
+            if (fs.existsSync(fullPath)) {
+                const stats = fs.statSync(fullPath);
+                if (stats.size > 10000) {
+                    dbPath = fullPath;
+                    break;
+                }
+            }
+        }
+
+        if (!dbPath) continue;
+        const storeName = (config as any).name;
 
         try {
             const db = new Database(dbPath, { readonly: true });
+            // db.pragma("journal_mode = WAL");
             const tableInfo = db.prepare("PRAGMA table_info(products)").all() as any[];
             const cols = tableInfo.map(c => c.name);
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 import { getUnifiedProducts } from "@/lib/db";
 import { applyRadarFiltros, RadarFilters } from "@/lib/radar-utils";
 

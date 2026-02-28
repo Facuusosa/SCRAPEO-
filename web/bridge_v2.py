@@ -295,6 +295,12 @@ def main():
             "v1": "targets/oncity/sniffer_oncity.py",
             "v2": "targets/oncity/sniffer_oncity_v2.py",  # futuro
         },
+        "newsan": {
+            "v1": "targets/newsan/sniffer_newsan.py",
+        },
+        "casadelaudio": {
+            "v1": "targets/casadelaudio/sniffer_casadelaudio.py",
+        },
     }
     
     # Crear bridge

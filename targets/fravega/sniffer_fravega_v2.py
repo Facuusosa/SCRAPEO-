@@ -75,153 +75,101 @@ class OdiseoOpportunity:
 
 class StockValidator:
     """
-    Valida stock real vía Playwright simulando "Add to Cart".
-    Solo se activa si el Sniffer grita "CANDIDATO" (gap >= 18%).
+    Valida stock real vía Playwright con Pool de Navegadores y Semáforo.
+    Optimizado para no saturar la RAM.
     """
     
     def __init__(self, proxy_url: Optional[str] = None):
         self.proxy_url = proxy_url
-        self.selectors = {
-            "add_to_cart": "button[data-testid='add-to-cart'], button:contains('Agregar')",
-            "cart_items": "div[data-testid='cart-item'], div.cart-product",
-            "remove_from_cart": "button[data-testid='remove-from-cart'], button:contains('Quitar')",
-        }
+        self.semaphore = asyncio.Semaphore(3)  # Máximo 3 validaciones concurrentes
+        self.playwright = None
+        self.browser = None
     
-    @staticmethod
-    def _calcular_margen_odiseo(gap_teorico: float) -> float:
-        """
-        Gap - 5% costos fijos = Margen Odiseo real
-        
-        Ejemplo:
-        Gap = 20% → Margen Odiseo = 20 - 5 = 15% neto ✅
-        Gap = 15% → Margen Odiseo = 15 - 5 = 10% (borderline)
-        Gap = 12% → Margen Odiseo = 12 - 5 = 7% (DESCARTA)
-        """
-        return gap_teorico - 5.0
-    
-    @staticmethod
-    async def _random_human_delay(min_sec: float = 1.0, max_sec: float = 5.0):
-        """Espera aleatoria para simular usuario dudando."""
-        delay = random.uniform(min_sec, max_sec)
-        logger.debug(f"⏱️ Esperando {delay:.1f}s (comportamiento humano)...")
-        await asyncio.sleep(delay)
-    
-    async def validar_stock_add_to_cart(self, product_url: str, sku_id: str) -> Tuple[bool, str, int]:
-        """
-        Validar stock simulando "Add to Cart" sin completar compra.
-        
-        Retorna:
-        - (stock_ok: bool, razon: str, tiempo_ms: int)
-        
-        Riesgos:
-        - Cloudflare puede detectar si no hay variación en user-agent/headers
-        - TOS violation: No completamos compra, solo verificamos
-        
-        Mitigación:
-        - Delays aleatorios
-        - Headers realistas
-        - Proxy rotation (si hay)
-        """
-        
-        inicio = datetime.now()
-        
-        async with async_playwright() as p:
-            # Usar Chromium (instalado en sistema)
-            browser = await p.chromium.launch(
+    async def start(self):
+        """Inicializa el browser si no existe."""
+        if not self.browser:
+            self.playwright = await async_playwright().start()
+            self.browser = await self.playwright.chromium.launch(
                 headless=True,
                 args=[
                     "--disable-blink-features=AutomationControlled",
                     "--no-sandbox",
                     "--disable-dev-shm-usage",
-                ],
+                ]
             )
+            logger.info("📡 Browser Pool inicializado")
+
+    async def stop(self):
+        """Cierra el pool."""
+        if self.browser:
+            await self.browser.close()
+            await self.playwright.stop()
+            self.browser = None
+            logger.info("🛑 Browser Pool apagado")
+    
+    @staticmethod
+    def _calcular_margen_odiseo(gap_teorico: float) -> float:
+        return gap_teorico - 5.0
+    
+    @staticmethod
+    async def _random_human_delay(min_sec: float = 1.0, max_sec: float = 5.0):
+        await asyncio.sleep(random.uniform(min_sec, max_sec))
+    
+    async def validar_stock_add_to_cart(self, product_url: str, sku_id: str) -> Tuple[bool, str, int]:
+        """
+        Validar stock con protección de concurrencia.
+        """
+        async with self.semaphore:
+            await self.start()
+            inicio = datetime.now()
             
-            context = await browser.new_context(
+            # Contexto aislado por cada validación
+            context = await self.browser.new_context(
                 proxy={"server": self.proxy_url} if self.proxy_url else None,
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             )
             
             page = await context.new_page()
-            
             try:
-                # 1. Navegar a producto
-                logger.info(f"📲 Validando stock: {product_url}")
-                await page.goto(product_url, wait_until="networkidle", timeout=30000)
+                # 1. Navegar con timeout agresivo
+                await page.goto(product_url, wait_until="domcontentloaded", timeout=25000)
                 
-                # 2. Comportamiento humano: scroll aleatorio
-                scroll_amount = random.randint(100, 300)
-                await page.evaluate(f"window.scrollBy(0, {scroll_amount})")
-                await asyncio.sleep(random.uniform(0.5, 1.5))
+                # 2. Simular lectura
+                await page.evaluate(f"window.scrollBy(0, {random.randint(100, 400)})")
+                await self._random_human_delay(1, 3)
                 
-                # 3. CRÍTICO: Esperar 2-8s antes de interactuar (usuario dudando)
-                await self._random_human_delay(min_sec=2, max_sec=8)
-                
-                # 4. Buscar botón "Agregar al carrito"
-                add_btn = None
-                try:
-                    # Intentar selector exacto
-                    add_btn = await page.query_selector("button[data-testid='add-to-cart']")
-                    if not add_btn:
-                        # Fallback: buscar por texto
-                        add_btn = await page.query_selector("button:has-text('Agregar')")
-                except:
-                    pass
+                # 3. Buscar botón (Filtro por data-testid o texto)
+                add_btn = await page.query_selector("button[data-testid='add-to-cart'], button:has-text('Agregar')")
                 
                 if not add_btn:
-                    logger.warning(f"❌ SKU {sku_id} - Botón agregar NO encontrado")
                     return False, "boton_no_encontrado", int((datetime.now() - inicio).total_seconds() * 1000)
                 
-                # 5. Verificar si está deshabilitado (sin stock)
-                try:
-                    is_disabled = await add_btn.is_disabled()
-                    if is_disabled:
-                        logger.warning(f"❌ SKU {sku_id} - Botón DESHABILITADO (sin stock)")
-                        return False, "stock_agotado", int((datetime.now() - inicio).total_seconds() * 1000)
-                except:
-                    pass
+                if await add_btn.is_disabled():
+                    return False, "stock_agotado", int((datetime.now() - inicio).total_seconds() * 1000)
                 
-                # 6. Click en agregar (con pequeña pausa)
-                await self._random_human_delay(min_sec=0.5, max_sec=1.5)
+                # 4. Click y confirmación
                 await add_btn.click()
-                logger.info(f"✅ SKU {sku_id} - Click en agregar")
+                await asyncio.sleep(2.5)
                 
-                # 7. Esperar confirmación (toast o carrito actualizado)
-                await asyncio.sleep(2)
+                # 5. Verificar carrito
+                cart_count = await page.query_selector("span[data-testid='cart-count'], .cart-qty, .cart-count")
+                in_cart = False
+                if cart_count:
+                    text = await cart_count.inner_text()
+                    in_cart = "0" not in text and text.strip() != ""
+                else:
+                    # Fallback por elementos de item
+                    items = await page.query_selector_all("div[data-testid='cart-item'], .cart-product")
+                    in_cart = len(items) > 0
                 
-                # 8. Verificar que se agregó al carrito
-                cart_items = await page.query_selector_all("div[data-testid='cart-item']")
-                
-                if not cart_items:
-                    # Fallback: buscar por clase genérica
-                    cart_items = await page.query_selector_all("div.cart-product, div.cart-item")
-                
-                stock_ok = len(cart_items) > 0
-                
-                # 9. CLEANUP: Quitar del carrito (no completamos compra)
-                if stock_ok:
-                    try:
-                        remove_btn = await page.query_selector("button[data-testid='remove-from-cart']")
-                        if not remove_btn:
-                            remove_btn = await page.query_selector("button:has-text('Quitar')")
-                        
-                        if remove_btn:
-                            await remove_btn.click()
-                            logger.info(f"🗑️ SKU {sku_id} - Removido del carrito (cleanup)")
-                    except Exception as e:
-                        logger.debug(f"⚠️ No se pudo quitar del carrito: {e}")
-                
-                tiempo_ms = int((datetime.now() - inicio).total_seconds() * 1000)
-                razon = "validado_ok" if stock_ok else "no_se_agrego"
-                
-                return stock_ok, razon, tiempo_ms
+                razon = "validado_ok" if in_cart else "no_se_agrego"
+                return in_cart, razon, int((datetime.now() - inicio).total_seconds() * 1000)
                 
             except Exception as e:
-                logger.error(f"💥 Error validando {sku_id}: {e}")
-                tiempo_ms = int((datetime.now() - inicio).total_seconds() * 1000)
-                return False, f"excepcion: {str(e)[:50]}", tiempo_ms
-            
+                return False, f"error: {str(e)[:40]}", int((datetime.now() - inicio).total_seconds() * 1000)
             finally:
-                await browser.close()
+                await page.close()
+                await context.close()
 
 
 # ============================================================================
@@ -334,6 +282,7 @@ class FravegaSnifferV2(BaseSniffer):
         """Crear tablas."""
         import sqlite3
         with sqlite3.connect(self.db_path) as conn:
+            conn.execute("PRAGMA journal_mode=WAL")
             conn.executescript("""
                 CREATE TABLE IF NOT EXISTS products (
                     id TEXT PRIMARY KEY,
@@ -590,6 +539,29 @@ class FravegaSnifferV2(BaseSniffer):
             raw_data={"sku_code": sku_code, "slug": slug},
         )
     
+    def save_products(self, products: list[Product]) -> None:
+        """Guardar productos normales en DB (para Radar/Market data)."""
+        import sqlite3
+        now = datetime.now().isoformat()
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute("PRAGMA journal_mode=WAL")
+            for p in products:
+                if p.current_price <= 0:
+                    continue
+                
+                conn.execute("""
+                    INSERT OR REPLACE INTO products (
+                        id, name, brand, current_price, list_price, 
+                        discount_pct, url, slug, image_url, source, last_seen
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    p.id, p.name, p.brand, p.current_price, p.list_price,
+                    p.discount_pct, p.url, p.raw_data.get("slug", ""), 
+                    p.image_url, p.source, now
+                ))
+            conn.commit()
+        self.logger.info(f"💾 {len(products)} productos guardados en {self.db_path}")
+    
     def save_opportunity(self, opp: OdiseoOpportunity) -> None:
         """Guardar oportunidad validada en DB."""
         db_url = os.environ.get("DATABASE_URL")
@@ -618,6 +590,7 @@ class FravegaSnifferV2(BaseSniffer):
         # Fallback a SQLite (Local)
         import sqlite3
         with sqlite3.connect(self.db_path) as conn:
+            conn.execute("PRAGMA journal_mode=WAL")
             conn.execute("""
                 INSERT INTO opportunities 
                 (product_id, product_name, current_price, gap_teorico, margen_odiseo, 
@@ -645,6 +618,13 @@ class FravegaSnifferV2(BaseSniffer):
 
 async def main():
     """Orquestador async del sniffer."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Frávega Sniffer V2 — Con Stock Validation")
+    parser.add_argument("--proxy", type=str, help="Proxy URL (ej: http://user:pass@proxy.com:80)")
+    parser.add_argument("--daemon", action="store_true", help="Correr en loop infinito")
+    parser.add_argument("--interval", type=int, default=300, help="Segundos entre ciclos")
+    args = parser.parse_args()
     
     # Cargar categorías
     data_dir = os.path.join(PROJECT_ROOT, "data")
@@ -653,7 +633,7 @@ async def main():
     if os.path.exists(json_path):
         with open(json_path, "r") as f:
             raw_categories = json.load(f)
-        target_categories = [c.strip("/") for c in raw_categories if c.strip("/")][:5]  # Primeras 5 para testing
+        target_categories = [c.strip("/") for c in raw_categories if c.strip("/")]
         logger.info(f"📦 Loaded {len(target_categories)} categorías")
     else:
         target_categories = [
@@ -661,54 +641,65 @@ async def main():
             "celulares-y-smartphones/celulares-y-smartphones",
         ]
     
-    sniffer = FravegaSnifferV2()
+    sniffer = FravegaSnifferV2(proxy_url=args.proxy)
     
-    # Procesar todas las categorías
-    for category in target_categories:
-        logger.info(f"\n{'='*60}")
-        logger.info(f"🔍 Escaneando: {category}")
-        logger.info(f"{'='*60}")
-        
-        # Fetch
-        raw_products = sniffer.fetch_products(category, size=20)
-        
-        # Parse
-        products = [sniffer.parse_product(p) for p in raw_products]
-        products = [p for p in products if p.in_stock and p.current_price > 0]
-        
-        logger.info(f"✅ {len(products)} productos válidos")
-        
-        # Filtrar candidatos (gap >= 18%)
-        for product in products:
-            gap, _ = sniffer._calcular_gap_y_margen(product.current_price, product.brand, category)
+    cycle = 0
+    while True:
+        cycle += 1
+        if args.daemon:
+            logger.info(f"\n{'='*60}")
+            logger.info(f"🔄 CICLO #{cycle} — {datetime.now().strftime('%H:%M:%S')}")
+            logger.info(f"{'='*60}")
+
+        # Procesar todas las categorías
+        for category in target_categories:
+            logger.info(f"\n{'='*60}")
+            logger.info(f"🔍 Escaneando: {category}")
+            logger.info(f"{'='*60}")
             
-            if gap >= 18:
-                # Procesar async
-                opp = await sniffer.procesar_candidato(product)
+            # Fetch
+            raw_products = sniffer.fetch_products(category, size=20)
+            
+            # Parse
+            products = [sniffer.parse_product(p) for p in raw_products]
+            products = [p for p in products if p.in_stock and p.current_price > 0]
+            
+            logger.info(f"✅ {len(products)} productos válidos")
+            
+            # Guardar en DB para Radar (Capa de Inteligencia)
+            sniffer.save_products(products)
+            
+            # Filtrar candidatos (gap >= 18%)
+            for product in products:
+                gap, _ = sniffer._calcular_gap_y_margen(product.current_price, product.brand, category)
                 
-                if opp:
-                    # Guardar en DB
-                    sniffer.save_opportunity(opp)
+                if gap >= 18:
+                    # Procesar async
+                    opp = await sniffer.procesar_candidato(product)
                     
-                    # 🚀 ENVIAR ALERTA TELEGRAM
-                    await sniffer.notifier.send_opportunity(opp)
-    
-    # Resumen
-    logger.info(f"\n{'='*60}")
-    logger.info(f"📊 RESUMEN FINAL")
-    logger.info(f"{'='*60}")
-    logger.info(f"Candidatos detectados: {sniffer.stats['candidatos']}")
-    logger.info(f"Oportunidades validadas: {sniffer.stats['validados']}")
-    logger.info(f"Rechazados por margen: {sniffer.stats['rechazados_margen']}")
-    logger.info(f"Rechazados por stock: {sniffer.stats['rechazados_stock']}")
-    logger.info(f"{'='*60}\n")
+                    if opp:
+                        # Guardar en DB
+                        sniffer.save_opportunity(opp)
+                        
+                        # 🚀 ENVIAR ALERTA TELEGRAM
+                        await sniffer.notifier.send_opportunity(opp)
+        
+        # Resumen
+        logger.info(f"\n{'='*60}")
+        logger.info(f"📊 RESUMEN CICLO #{cycle}")
+        logger.info(f"{'='*60}")
+        logger.info(f"Candidatos detectados: {sniffer.stats['candidatos']}")
+        logger.info(f"Oportunidades validadas: {sniffer.stats['validados']}")
+        logger.info(f"Rechazados por margen: {sniffer.stats['rechazados_margen']}")
+        logger.info(f"Rechazados por stock: {sniffer.stats['rechazados_stock']}")
+        logger.info(f"{'='*60}\n")
+
+        if not args.daemon:
+            break
+        
+        logger.info(f"⏳ Esperando {args.interval}s para el siguiente ciclo...")
+        await asyncio.sleep(args.interval)
 
 
 if __name__ == "__main__":
-    import argparse
-    
-    parser = argparse.ArgumentParser(description="Frávega Sniffer V2 — Con Stock Validation")
-    parser.add_argument("--proxy", type=str, help="Proxy URL (ej: http://user:pass@proxy.com:80)")
-    args = parser.parse_args()
-    
     asyncio.run(main())
